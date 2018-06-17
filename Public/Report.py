@@ -31,6 +31,7 @@ def create_index_html(path_list):
         f.close()
 
 def _get_report_info(run):
+    '''获取每个设备报告的参数'''
     report = run.test_report_path + '/TestReport.html'
     result = {}
     with open(report, 'r', encoding='utf-8') as f:
@@ -70,7 +71,10 @@ def backup_report():
     if not os.path.exists("./TestReport"):
         os.mkdir("./TestReport")
     date_time = time.strftime('%Y-%m-%d_%H_%M_%S', time.localtime(time.time()))
-    os.rename('./TestReport', './TestReport_backup/Backup_' + date_time)
+    try:
+        os.rename('./TestReport', './TestReport_backup/Backup_' + date_time)
+    except PermissionError as e:
+        raise e
     print('Backup TestReport dir success')
 
 

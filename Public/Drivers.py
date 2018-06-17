@@ -50,12 +50,13 @@ class Drivers:
         else:
             raise Exception('Config.ini method illegal:method =%s' % method)
 
-        # generate test data data.json 准备测试数据
-        generate_test_data(devices)
 
         if not devices:
             print('There is no device found')
             return
+
+        # generate test data data.json 准备测试数据
+        generate_test_data(devices)
 
         print('Starting Run test >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         runs = []
@@ -72,6 +73,7 @@ class Drivers:
         pool.join()
         print('All runs done........ ')
         ChromeDriver.kill()
+
         #  Generate statistics report  生成统计测试报告 将所有设备的报告在一个HTML中展示
         create_statistics_report(runs)
 

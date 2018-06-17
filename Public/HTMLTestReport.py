@@ -69,99 +69,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 __author__ = "Wai Yip Tung,  Findyou,  boafantasy,  Gelomen"
 __version__ = "1.2.0"
 
-
-"""
-Change History
-Version 1.2.0 -- Gelomen
-* 优化用例说明显示
-* 错误和失败报告里可以放入多张截图
-
-Version 1.1.0 -- Gelomen
-* 优化报告截图写入方式
-
-Version 1.0.2 -- Gelomen
-* 新增测试结果统计饼图
-* 优化筛选时只显示预览
-
-Version 1.0.1 -- Gelomen
-* 修复报告存入文件夹的bug
-* 优化报告的命名方式
-
-Version 1.0.0 -- Gelomen
-* 修改测试报告文件夹路径的获取方式
-* 修改截图获取文件夹路径的获取方式
-
-Version 0.9.9 -- Gelomen
-* 优化报告文件夹命名
-* 优化截图存放的目录
-* 增加图片阴影边框以突出图片
-* 优化 失败用例合集 和 错误用例合集 显示的颜色
-
-Version 0.9.8 -- Gelomen
-* 优化回到顶部按钮的显示方式
-
-Version 0.9.7 -- Gelomen
-* 优化截图显示，滚动页面会固定居中
-
-Version 0.9.6 -- Gelomen
-* 新增打开图片的特效，可以直接在当前页面看截图
-
-Version 0.9.5 -- Gelomen
-* heading新增 失败 和 错误 测试用例合集
-
-Version 0.9.4 -- Gelomen
-* 修复失败和错误用例里对应按钮的颜色
-
-Version 0.9.3 -- Gelomen
-* 修复点击失败或错误按钮后，浏览器版本和截图的列不会隐藏的bug
-
-Version 0.9.2 -- Gelomen
-* 美化 浏览器版本 和 截图 的显示
-
-Version 0.9.1 -- Gelomen
-* 使用UI自动化测试时，增加 错误、失败 详细信息的 浏览器类型和版本
-
-Version 0.9.0 -- Gelomen
-* 可通过 `need_screenshot=1` 作为开关，将报告开启截图功能
-* 增加 失败 和 错误 详细信息的 截图链接
-
-Version 0.8.4 -- Gelomen
-* 删除 失败模块 的显示
-
-Version 0.8.3 -- Gelomen
-* 修复 测试结果 的筛选
-* 优化 失败、错误 小图标的颜色
-* 增加表格 最后一列 的显示，以美化表格
-
-Version 0.8.2.1 -Findyou
-* 改为支持python3
-
-Version 0.8.2.1 -Findyou
-* 支持中文，汉化
-* 调整样式，美化（需要连入网络，使用的百度的Bootstrap.js）
-* 增加 通过分类显示、测试人员、通过率的展示
-* 优化“详细”与“收起”状态的变换
-* 增加返回顶部的锚点
-
-Version 0.8.2
-* Show output inline instead of popup window (Viorel Lupu).
-
-Version in 0.8.1
-* Validated XHTML (Wolfgang Borgert).
-* Added description of test classes and test cases.
-
-Version in 0.8.0
-* Define Template_mixin class for customization.
-* Workaround a IE 6 bug that it does not treat <script> block as CDATA.
-
-Version in 0.7.1
-* Back port to Python 2.3 (Frank Horowitz).
-* Fix missing scroll bars in detail log (Podi).
-"""
-
-# TODO: color stderr
-# TODO: simplify javascript using ,ore than 1 class in the class attribute?
-
 import datetime
 import io
 import time
@@ -170,39 +77,6 @@ from xml.sax import saxutils
 import sys
 import os
 import re
-
-
-# 全局变量      -- Gelomen
-_global_dict = {}
-
-
-# 让新建的报告文件夹路径存入全局变量       -- Gelomen
-class GlobalMsg(object):
-    def __init__(self):
-        global _global_dict
-        _global_dict = {}
-
-    @staticmethod
-    def set_value(name, value):
-        _global_dict[name] = value
-
-    @staticmethod
-    def get_value(name):
-        try:
-            return _global_dict[name]
-        except KeyError:
-            return None
-
-# ------------------------------------------------------------------------
-# The redirectors below are used to capture output during testing. Output
-# sent to sys.stdout and sys.stderr are automatically captured. However
-# in some cases sys.stdout is already cached before HTMLTestRunner is
-# invoked (e.g. calling logging.basicConfig). In order to capture those
-# output, use the redirectors for the cached stream.
-#
-# e.g.
-#   >>> logging.basicConfig(stream=HTMLTestRunner.stdout_redirector)
-#   >>>
 
 
 class OutputRedirector(object):
@@ -223,9 +97,6 @@ class OutputRedirector(object):
 
 stdout_redirector = OutputRedirector(sys.stdout)
 stderr_redirector = OutputRedirector(sys.stderr)
-
-# ----------------------------------------------------------------------
-# Template
 
 
 class Template_mixin(object):
@@ -803,6 +674,7 @@ table       { font-size: 100%; }
     </span></a></div>
     """
 
+
 # -------------------- The end of the Template class -------------------
 
 
@@ -959,7 +831,6 @@ class HTMLTestRunner(Template_mixin):
         print("\n\033[36;0m--------------------- 测试结束 ---------------------\n"
               "------------- 合计耗时: %s -------------\033[0m" % (self.stopTime - self.startTime), file=sys.stderr)
 
-
     def sortResult(self, result_list):
         # unittest does not seems to run in any particular order.
         # Here at least we want to group them together by class.
@@ -993,7 +864,8 @@ class HTMLTestRunner(Template_mixin):
         if status:
             status = '，'.join(status)
             if (result.success_count + result.failure_count + result.error_count) > 0:
-                self.passrate = str("%.2f%%" % (float(result.success_count) / float(result.success_count + result.failure_count + result.error_count) * 100))
+                self.passrate = str("%.2f%%" % (float(result.success_count) / float(
+                    result.success_count + result.failure_count + result.error_count) * 100))
             else:
                 self.passrate = "0.00 %"
         else:
@@ -1193,7 +1065,7 @@ class HTMLTestRunner(Template_mixin):
         screenshot_list = re.findall("IMAGE:(\S+PNG)", image, re.M)
         screenshot = ""
         for i in screenshot_list:
-            num = str(screenshot_list.index(i)+1)
+            num = str(screenshot_list.index(i) + 1)
             screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">IMAGE_0" + num + "</a>"
 
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL_1 or self.REPORT_TEST_NO_OUTPUT_TMPL
@@ -1215,7 +1087,6 @@ class HTMLTestRunner(Template_mixin):
 
     def _generate_ending(self):
         return self.ENDING_TMPL
-
 
 
 ##############################################################################
