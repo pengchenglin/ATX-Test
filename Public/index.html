@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ATX_Test Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+
+    <style type="text/css" media="screen">
+    body        { font-family: Microsoft YaHei;padding: 20px; font-size: 100%; }
+    table       { font-size: 100%; }
+    .table tbody tr td{
+                vertical-align: middle;
+            }
+
+    .heading .description, .attribute {
+        clear: both;
+    }
+
+    #failCaseOl li {
+        color: red
+    }
+    #errorCaseOl li {
+        color: orange
+    }
+    .pic_box img{
+        width: auto;
+        height: 100%;
+        -moz-box-shadow: 0px 0px 20px 0px #000;
+        -webkit-box-shadow: 0px 0px 20px 0px #000;
+        box-shadow: 0px 0px 20px 0px #000;
+    }
+    #total_row  { font-weight: bold; }
+    body>div.content{width:1200px;margin-left:auto;margin-right:auto;text-align:center;}
+    </style>
+
+</head>
+<body>
+<div class="content">
+
+
+    <h1>基于ATX的UI自动化测试报告</h1>
+    <p>合计报告数： {{ urls|length }} </p>
+    <table id="result_table" class="table table-condensed table-bordered table-hover">
+        <colgroup>
+        <col align="left" style="width: 300px;">
+        <col align="right">
+        <col align="right">
+        <col align="right">
+        <col align="right">
+        <col align="right">
+        <col align="right" style="width: 200px;">
+        </colgroup>
+        <tbody>
+
+            <tr id="header_row" class="text-center success" style="font-weight: bold;font-size: 14px;">
+            <td>测试报告</td>
+            <td>总计</td>
+            <td>通过</td>
+            <td>失败</td>
+            <td>错误</td>
+            <td>耗时</td>
+            <td>通过率</td>
+            </tr>
+            <!--这里写for开头-->
+            <!--{% for url in urls -%}-->
+            <tr class="errorClass warning">
+                <td><li><a href="{{ url['urls'] }}">{{ url['name'] }}</a></li></td>
+                <!--<td></td>-->
+                <td class="text-center">{{ url['sum'] }}</td>
+                <td class="text-center">{{ url['pass'] }}</td>
+                <td class="text-center">{{ url['fail'] }}</td>
+                <td class="text-center">{{ url['error'] }}</td>
+                <td class="text-center">{{ url['duration'] }}</td>
+                <td class="text-center">{{ url['passrate'] }}</td>
+            </tr>
+            <!--{% endfor -%}-->
+            <!--这里写for结束-->
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
