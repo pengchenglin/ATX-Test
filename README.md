@@ -5,9 +5,9 @@
 
 1.下面展示的内容多源于TesterHome各位前辈的经验总结，我只是按照我的想法进行了简单拼接（基于ATX-uiautomator2的android自动化测试）
 
-2.主要参考了hualin (王华林) 老师的https://testerhome.com/topics/7550，并在此基础上结合uiautomator2实现
+2.主要参考了hualin (王华林) 老师的https://testerhome.com/topics/7550  ，并在此基础上结合uiautomator2实现
 
-3.所用语言为Python，测试报告模板借用了https://github.com/Gelomen/HTMLTestReportCN-ScreenShot，并进行了简单的修改以方便截图
+3.所用语言为Python，测试报告模板借用了https://github.com/Gelomen/HTMLTestReportCN-ScreenShot  ，并进行了简单的修改以方便截图
 
 4.使用了macaca的bootstrap app作为demo演示
 
@@ -17,7 +17,7 @@
 
 ![atx-1](Image/atx-1.png)
 
-主体结构和hualin (王华林) 老师的https://testerhome.com/topics/7550的一致，主要修改了Pubilc下一些东西，并增加了一些东西
+主体结构和hualin (王华林) 老师的https://testerhome.com/topics/7550  的一致，主要修改了Pubilc下一些东西，并增加了一些东西
 
 **Public：** 
 
