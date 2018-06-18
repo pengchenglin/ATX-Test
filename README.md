@@ -1,6 +1,14 @@
 
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
 
+#### 前置条件
+Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
+相关的基础连接如下
+[小白入门篇：python uiautomator2 的代码示例]( https://testerhome.com/topics/12521)
+[浅谈自动化测试工具 python-uiautomator2](https://testerhome.com/topics/11357)
+[atx 安卓集群管理 安装运行及自动化的实践](https://testerhome.com/topics/11588)
+[ATX-uiautomator2 实现 webview 的操作](https://testerhome.com/topics/12599)
+
 #### 先行声明：
 
 1.下面展示的内容多源于TesterHome各位前辈的经验总结，我只是按照我的想法进行了简单拼接（基于ATX-uiautomator2的android自动化测试）
