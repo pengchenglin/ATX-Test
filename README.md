@@ -3,11 +3,15 @@
 
 #### 前置条件
 Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
-相关的基础连接如下
+相关的基础链接如下
 [小白入门篇：python uiautomator2 的代码示例]( https://testerhome.com/topics/12521)
+
 [浅谈自动化测试工具 python-uiautomator2](https://testerhome.com/topics/11357)
+
 [atx 安卓集群管理 安装运行及自动化的实践](https://testerhome.com/topics/11588)
+
 [ATX-uiautomator2 实现 webview 的操作](https://testerhome.com/topics/12599)
+
 
 #### 先行声明：
 
@@ -130,7 +134,7 @@ def run(self, cases):
 
 每个设备的测试结果及报告或存放在单独的文件夹下
 
-在Testreport目录下回有一个同统计测试报告（自动化测试报告.html)会将所有设备的报告统一在一个页面展示
+在Testreport目录下回有一个统计测试报告（自动化测试报告.html)会将所有设备的报告统一在一个页面展示
 
 报告展示：
 
