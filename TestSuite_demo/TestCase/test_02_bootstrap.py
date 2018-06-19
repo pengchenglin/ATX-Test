@@ -44,15 +44,23 @@ class TestBootStrap(unittest.TestCase, BasePage):
 
     @testcase
     def test_02_show_toast(self):
-        '''点击弹窗toast'''
+        '''获取toast'''
         self.d(resourceId="com.github.android_app_bootstrap:id/imageview").click()
         self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
         self.d(text='Toast').click()
+        toast1 = self.get_toast_message()
+        assert 'Toast' in toast1
+        print('点击Toast按钮后的toast信息为:\n%s' % toast1)
+        time.sleep(2)
         self.d(text='Show Dialog').click()
+        toast2 = self.get_toast_message()
+        self.assertEqual('Hello', toast2)
+        print('点击Show Dialog后的toast信息为:\n%s'% toast2)
+
         self.back()
         self.back()
 
-
+    # @unittest.skip
     @testcase
     def test_03_auto_click_alert(self):
         '''弹窗自动点击测试'''

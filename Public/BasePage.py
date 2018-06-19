@@ -85,6 +85,11 @@ class BasePage(object):
         cls.d.watchers.watched = False
 
     @classmethod
+    def get_toast_message(cls):
+        message = cls.d.toast.get_message(3, 3)
+        return message
+
+    @classmethod
     def set_fastinput_ime(cls):
         cls.d.set_fastinput_ime(True)
 

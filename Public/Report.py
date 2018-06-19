@@ -38,12 +38,11 @@ def _get_report_info(run):
         res_str = re.findall("测试结果(.+%)", f.read())
         if res_str:
             res = re.findall(r"\d+", res_str[0])
-            print(res)
             result["sum"] = res[0]
             result["pass"] = res[1]
             result['fail'] = res[2]
             result['error'] = res[3]
-            result['passrate'] = re.findall('通过率 = (.+%)', res_str)[0]
+            result['passrate'] = re.findall('通过率 = (.+%)', res_str[0])[0]
         else:
             raise Exception("The TestReport.html in %s has no string'测试结果',please check out!!!" % run.get_path())
         f.close()

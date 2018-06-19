@@ -64,6 +64,6 @@ class apk_install(unittest.TestCase, BasePage):
     def test_04_error(self):
         '''错误处理'''
         print('手动出错')
-        raise Exception('ERROR!!!!!!!')
+        raise Exception('手动ERROR!!!!!!!')
 
 
