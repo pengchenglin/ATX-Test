@@ -857,10 +857,16 @@ class HTMLTestRunner(Template_mixin):
         status.append('共计 %s' % (result.success_count + result.failure_count + result.error_count))
         if result.success_count:
             status.append('通过 %s' % result.success_count)
+        else:
+            status.append('通过 0')
         if result.failure_count:
             status.append('失败 %s' % result.failure_count)
+        else:
+            status.append('失败 0')
         if result.error_count:
             status.append('错误 %s' % result.error_count)
+        else:
+            status.append('错误 0')
         if status:
             status = '，'.join(status)
             if (result.success_count + result.failure_count + result.error_count) > 0:
