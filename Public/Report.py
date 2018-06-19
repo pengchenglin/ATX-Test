@@ -35,13 +35,17 @@ def _get_report_info(run):
     report = run.test_report_path + '/TestReport.html'
     result = {}
     with open(report, 'r', encoding='utf-8') as f:
-        res_str = re.findall("测试结果(.+%)", f.read())[0]
-        res = re.findall(r"\d+", res_str)
-        result["sum"] = res[0]
-        result["pass"] = res[1]
-        result['fail'] = res[2]
-        result['error'] = res[3]
-        result['passrate'] = re.findall('通过率 = (.+%)', res_str)[0]
+        res_str = re.findall("测试结果(.+%)", f.read())
+        if res_str:
+            res = re.findall(r"\d+", res_str[0])
+            print(res)
+            result["sum"] = res[0]
+            result["pass"] = res[1]
+            result['fail'] = res[2]
+            result['error'] = res[3]
+            result['passrate'] = re.findall('通过率 = (.+%)', res_str)[0]
+        else:
+            raise Exception("The TestReport.html in %s has no string'测试结果',please check out!!!" % run.get_path())
         f.close()
     with open(report, 'r', encoding='utf-8') as f:
         result['duration'] = re.findall("合计耗时 : </strong> (.+)</p>", f.read())[0].split('.')[0]
