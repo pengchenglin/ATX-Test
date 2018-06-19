@@ -4,6 +4,7 @@
 #### 前置条件
 Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
 相关的基础链接如下
+
 [小白入门篇：python uiautomator2 的代码示例]( https://testerhome.com/topics/12521)
 
 [浅谈自动化测试工具 python-uiautomator2](https://testerhome.com/topics/11357)
