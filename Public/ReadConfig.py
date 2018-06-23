@@ -14,16 +14,16 @@ class ReadConfig:
         self.cf = configparser.ConfigParser()
         self.cf.read(configPath, encoding='UTF-8')
 
-    def get_atx_server(self, name):
-        value = self.cf.get("ATXSERVER", name)
+    def get_method(self):
+        value = self.cf.get("DEVICES", 'method')
         return value
 
-    def get_url(self):
-        value = self.cf.get("ATXSERVER", "host")
+    def get_server_url(self):
+        value = self.cf.get("DEVICES", "server")
         return value
 
-    def get_devices(self):
-        value = self.cf.get("ATXSERVER", "devices")
+    def get_devices_ip(self):
+        value = self.cf.get("DEVICES", "IP")
         return value.split('/')
 
     def get_apk_url(self):
