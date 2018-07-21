@@ -82,14 +82,14 @@ class ChromeDriver(object):
     @staticmethod
     def kill():
         # # for windows
-        # pid = getPidByName('chromedriver.exe')
-        # for i in pid:
-        #     os.popen('taskkill /PID %d /F' % i)
-
-        # for mac
-        pid = getPidByName('chromedriver')
+        pid = getPidByName('chromedriver.exe')
         for i in pid:
-            os.popen('kill -9 %d' % i)
+            os.popen('taskkill /PID %d /F' % i)
+
+        # # for mac
+        # pid = getPidByName('chromedriver')
+        # for i in pid:
+        #     os.popen('kill -9 %d' % i)
 
         print('All chromedriver pid killed')
 

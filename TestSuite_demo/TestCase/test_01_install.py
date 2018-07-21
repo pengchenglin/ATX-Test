@@ -30,7 +30,7 @@ class apk_install(unittest.TestCase, BasePage):
     @testcase
     def test_01_install_apk(self):
         '''安装启动android_app_bootstrap'''
-        # self.d.app_install(apk_url)
+        self.d.app_install(apk_url)
         self.d.app_start(pkg_name)
 
         time.sleep(3)
