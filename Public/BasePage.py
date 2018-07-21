@@ -65,6 +65,7 @@ class BasePage(object):
     def back(cls):
         '''点击返回'''
         cls.d.press('back')
+        time.sleep(0.2)
 
     def set_chromedriver(self, device_ip=None, package=None, activity=None, process=None):
         driver = ChromeDriver(self.d, Ports().get_ports(1)[0]). \
@@ -86,7 +87,8 @@ class BasePage(object):
 
     @classmethod
     def get_toast_message(cls):
-        message = cls.d.toast.get_message(3, 3)
+        message = cls.d.toast.get_message(10, 10)
+        cls.d.toast.reset()
         return message
 
     @classmethod
