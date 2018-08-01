@@ -191,7 +191,7 @@ def get_devices():
     for i in devices_ip:
         try:
             device = u2.connect(i)
-            if device.alive:
+            if device.healthcheck:
                 dict_tmp = device.device_info
                 dict_tmp['ip'] = i
                 devices_list.append(dict_tmp)
@@ -217,7 +217,7 @@ def connect_devices():
         for i in valid_serials:
             try:
                 device = u2.connect(i)
-                if device.alive:
+                if device.healthcheck:
                     dict_tmp = device.device_info
                     devices_list.append(dict_tmp)
                 else:
@@ -228,13 +228,14 @@ def connect_devices():
     if len(valid_serials) == 0:
         print("No avaliable android devices detected.")
 
+
 # if __name__ == '__main__':
-#     # # get device# s from atx-server
-#     # s = ATX_Server('http://10.0.34.75:8000/')
-#     # print(s.devices())
-#     # print(s.all_devices())
-#     # print(s.online_devices())
+#     # get devicefrom atx-server
+#     s = ATX_Server('http://10.0.34.2:8000/')
+#     print(s.devices())
+#     print(s.all_devices())
+#     print(s.online_devices())
 #
 #     # get devices from config.ini devices list
 #     print(get_devices())
-#     connect_devices()
+#     print(connect_devices())
