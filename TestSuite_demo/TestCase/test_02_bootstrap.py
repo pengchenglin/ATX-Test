@@ -55,7 +55,8 @@ class TestBootStrap(unittest.TestCase, BasePage):
         # time.sleep(2)
         self.d(text='Show Dialog').click()
         toast2 = self.get_toast_message()
-        self.assertEqual('Hello', toast2)
+        self.assertIn('Hello',toast2)
+        # self.assertEqual('Hello', toast2)
         print('点击Show Dialog后的toast信息为:\n%s' % toast2)
 
         self.back()
@@ -94,12 +95,14 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.screenshot()   # 手动截图
         driver.find_element_by_id('index-bn').click()
         time.sleep(3)
+        self.d(text=u"logo", className="android.view.View").click()
         driver.quit()
 
     @testcase
     def test_05_webview_u2(self):
         '''直接用u2操作webview'''
-        self.d(resourceId="se-form").child(className="android.widget.EditText").set_text("西湖美景")
+        # self.d(resourceId="index-form").child(className="android.widget.EditText").set_text("西湖美景")
+        self.d(resourceId="index-kw", className="android.widget.EditText").set_text("西湖美景")
         self.d(text=u"百度一下", className="android.widget.Button").click()
         self.d(text=u"西湖十景_百度百科").click()
         time.sleep(4)
