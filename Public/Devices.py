@@ -191,7 +191,7 @@ def get_devices():
     for i in devices_ip:
         try:
             device = u2.connect(i)
-            if device.healthcheck:
+            if device.alive:
                 dict_tmp = device.device_info
                 dict_tmp['ip'] = i
                 devices_list.append(dict_tmp)
@@ -217,7 +217,7 @@ def connect_devices():
         for i in valid_serials:
             try:
                 device = u2.connect(i)
-                if device.healthcheck:
+                if device.alive:
                     dict_tmp = device.device_info
                     devices_list.append(dict_tmp)
                 else:

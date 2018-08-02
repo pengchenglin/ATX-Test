@@ -87,7 +87,7 @@ class BasePage(object):
 
     @classmethod
     def get_toast_message(cls):
-        message = cls.d.toast.get_message(10, 10)
+        message = cls.d.toast.get_message(3, 3)
         cls.d.toast.reset()
         return message
 
