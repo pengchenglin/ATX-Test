@@ -17,7 +17,7 @@ class apk_install(unittest.TestCase, BasePage):
     @classmethod
     @setupclass
     def setUpClass(cls):
-        cls.set_fastinput_ime()
+        # cls.set_fastinput_ime()
         cls.unlock_device()
         cls.d.app_stop_all()
 

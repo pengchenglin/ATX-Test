@@ -44,7 +44,8 @@ class Drivers:
         method = ReadConfig().get_method().strip()
         if method == 'SERVER':
             # get ATX-Server Online devices
-            devices = ATX_Server(ReadConfig().get_server_url()).online_devices()
+            # devices = ATX_Server(ReadConfig().get_server_url()).online_devices()
+            devices = get_online_devices()
             print('\nThere has %s online devices in ATX-Server' % len(devices))
         elif method == 'IP':
             # get  devices from config devices list

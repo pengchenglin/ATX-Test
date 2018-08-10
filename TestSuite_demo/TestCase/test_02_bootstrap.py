@@ -20,6 +20,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         cls.test_data = get_test_data(cls.d)
 
+
     @classmethod
     @teardownclass
     def tearDownClass(cls):
@@ -39,6 +40,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
     def test_01_login(self):
         '''登录'''
         LoginPage.LoginPage().wait_page()
+        self.set_fastinput_ime()
         LoginPage.login(self.test_data['user_name'], self.test_data['password'])
         print('登录成功')
 
