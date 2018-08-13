@@ -5,6 +5,8 @@
 Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
 uiautomator版本需 Version: 0.1.3.dev5 及以后
 
+需要依赖的python第三方库 tinydb、uiautomator2、selenium、jinja2、psutil
+
 相关的基础链接如下
 
 [小白入门篇：python uiautomator2 的代码示例]( https://testerhome.com/topics/12521)
