@@ -29,7 +29,7 @@ def get_devices():
 
 
 def get_online_devices():
-    '''get the devices from Pubilc/config.ini devices list
+    '''get the devices from ATX-Server
     return alive devices'''
     devices = ATX_Server(ReadConfig().get_server_url()).online_devices()
     # print('Connect devices from config devices IP list %s' % devices_ip)
@@ -47,7 +47,7 @@ def get_online_devices():
 
 
 def connect_devices():
-    '''get the devices usb connected on PC
+    '''get the devices USB connected on PC
     return alive devices'''
     output = subprocess.check_output(['adb', 'devices'])
     pattern = re.compile(

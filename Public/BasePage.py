@@ -47,6 +47,21 @@ class BasePage(object):
     #     # empty result
     #     warnings.warn("Couldn't get focused app", stacklevel=2)
     #     return dict(package=None, activity=None)
+
+    @classmethod
+    def local_install(cls, apk_path):
+        '''
+        安装本地apk 覆盖安装
+        :param apk_path: apk文件本地路径
+        '''
+        dst = '/sdcard/' + os.path.basename(apk_path)
+        cls.d.push(apk_path, dst)
+        print('start install %s' % dst)
+        r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
+        id = r.text.strip()
+        print(time.strftime('%H:%M:%S'), id)
+        cls.d.shell(['rm', dst])
+
     @classmethod
     def unlock_device(cls):
         '''unlock.apk install and launch'''

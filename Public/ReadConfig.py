@@ -30,6 +30,10 @@ class ReadConfig:
         value = self.cf.get("APP", "apk_url")
         return value
 
+    def get_apk_path(self):
+        value = self.cf.get("APP", "apk_path")
+        return value
+
     def get_pkg_name(self):
         value = self.cf.get("APP", "pkg_name")
         return value

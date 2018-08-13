@@ -11,6 +11,7 @@ import unittest
 from Public.ReadConfig import ReadConfig
 apk_url = ReadConfig().get_apk_url()
 pkg_name = ReadConfig().get_pkg_name()
+apk_path = ReadConfig().get_apk_path()
 
 
 class apk_install(unittest.TestCase, BasePage):
@@ -30,7 +31,8 @@ class apk_install(unittest.TestCase, BasePage):
     @testcase
     def test_01_install_apk(self):
         '''安装启动android_app_bootstrap'''
-        self.d.app_install(apk_url)
+        # self.d.app_install(apk_url)
+        self.local_install(apk_path)
         self.d.app_start(pkg_name)
 
         time.sleep(3)
