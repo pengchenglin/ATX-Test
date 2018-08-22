@@ -60,7 +60,7 @@ class Drivers:
             raise Exception('Config.ini method illegal:method =%s' % method)
 
         if not devices:
-            print('There is no device found')
+            print('There is no device found,test over.')
             return
 
         # generate test data data.json 准备测试数据

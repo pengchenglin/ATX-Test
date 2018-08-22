@@ -71,3 +71,4 @@ def connect_devices():
         return devices_list
     if len(valid_serials) == 0:
         print("No avaliable android devices detected.")
+        return []
