@@ -19,7 +19,7 @@ class apk_install(unittest.TestCase, BasePage):
     @setupclass
     def setUpClass(cls):
         # cls.set_fastinput_ime()
-        cls.unlock_device()
+        # cls.unlock_device()
         cls.d.app_stop_all()
 
 
@@ -43,7 +43,8 @@ class apk_install(unittest.TestCase, BasePage):
     def test_03_screenshot(self):
         '''手动截图测试'''
         self.screenshot()
-        self.d.open_identify()
+        self.d.toast.show('HELLO ATX', 2)
+        time.sleep(0.5)
         self.screenshot()
 
     @testcase

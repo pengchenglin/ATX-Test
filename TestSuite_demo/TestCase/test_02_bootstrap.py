@@ -14,19 +14,18 @@ import unittest
 # @unittest.skip
 class TestBootStrap(unittest.TestCase, BasePage):
     '''BootStrap demo测试'''
+
     @classmethod
     @setupclass
     def setUpClass(cls):
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         cls.test_data = get_test_data(cls.d)
 
-
     @classmethod
     @teardownclass
     def tearDownClass(cls):
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
-        cls.set_original_ime()
-        cls.d.open_identify()
+        # cls.set_original_ime()
 
     # @setup
     # def setUp(self):
@@ -44,7 +43,6 @@ class TestBootStrap(unittest.TestCase, BasePage):
         LoginPage.login(self.test_data['user_name'], self.test_data['password'])
         print('登录成功')
 
-
     @testcase
     def test_02_show_toast(self):
         '''获取toast'''
@@ -57,13 +55,12 @@ class TestBootStrap(unittest.TestCase, BasePage):
         # time.sleep(2)
         self.d(text='Show Dialog').click()
         toast2 = self.get_toast_message()
-        self.assertIn('Hello',toast2)
+        self.assertIn('Hello', toast2)
         # self.assertEqual('Hello', toast2)
         print('点击Show Dialog后的toast信息为:\n%s' % toast2)
 
         self.back()
         self.back()
-
 
     @testcase
     def test_03_auto_click_alert(self):
@@ -94,7 +91,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         driver.find_element_by_id('index-kw').click()
         driver.find_element_by_id('index-kw').send_keys('Python')
         time.sleep(3)
-        self.screenshot()   # 手动截图
+        self.screenshot()  # 手动截图
         driver.find_element_by_id('index-bn').click()
         time.sleep(3)
         self.d(text=u"logo", className="android.view.View").click()
@@ -125,7 +122,6 @@ class TestBootStrap(unittest.TestCase, BasePage):
 
         LoginPage.LoginPage().wait_page()
 
-
     @testcase
     def test_07_login_again(self):
         '''再次登录'''
@@ -141,6 +137,3 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.swipe_left()
         self.swipe_down()
         self.swipe_right()
-
-        
-

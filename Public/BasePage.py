@@ -51,7 +51,7 @@ class BasePage(object):
     @classmethod
     def local_install(cls, apk_path):
         '''
-        安装本地apk 覆盖安装
+        安装本地apk 覆盖安装，不需要usb链接
         :param apk_path: apk文件本地路径
         '''
         dst = '/sdcard/' + os.path.basename(apk_path)
@@ -81,6 +81,10 @@ class BasePage(object):
         '''点击返回'''
         cls.d.press('back')
         time.sleep(0.2)
+
+    @classmethod
+    def identify(cls):
+        cls.d.open_identify()
 
     def set_chromedriver(self, device_ip=None, package=None, activity=None, process=None):
         driver = ChromeDriver(self.d, Ports().get_ports(1)[0]). \
