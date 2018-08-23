@@ -79,8 +79,10 @@ class BasePage(object):
     @classmethod
     def back(cls):
         '''点击返回'''
+        time.sleep(0.5)
         cls.d.press('back')
-        time.sleep(0.2)
+        time.sleep(0.5)
+
 
     @classmethod
     def identify(cls):
