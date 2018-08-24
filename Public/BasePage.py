@@ -54,12 +54,29 @@ class BasePage(object):
         安装本地apk 覆盖安装，不需要usb链接
         :param apk_path: apk文件本地路径
         '''
-        dst = '/sdcard/' + os.path.basename(apk_path)
+        file_name = os.path.basename(apk_path)
+        dst = '/sdcard/' + file_name
         cls.d.push(apk_path, dst)
         print('start install %s' % dst)
-        r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
-        id = r.text.strip()
-        print(time.strftime('%H:%M:%S'), id)
+        if cls.d.device_info['brand'] == 'vivo':
+            '''Vivo 手机通过打开文件管理 安装app'''
+            cls.d.app_stop('com.android.filemanager')
+            cls.d.app_start('com.android.filemanager')
+            cls.d(resourceId="com.android.filemanager:id/disk_info_parent").click()
+            cls.d(scrollable=True, resourceId="com.android.filemanager:id/file_listView").scroll.toEnd()
+            time.sleep(0.5)
+            print(file_name)
+            cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
+            cls.d(resourceId="com.android.packageinstaller:id/continue_button").click()
+            cls.d(resourceId="com.android.packageinstaller:id/ok_button").click()
+            print(cls.d(resourceId="com.android.packageinstaller:id/checked_result").get_text())
+        else:
+            cls.watch_device(['允许', '继续安装', '允许安装', '始终允许'])
+            cls.d.shell(['pm', 'install', '-r', dst])
+            r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
+            id = r.text.strip()
+            print(time.strftime('%H:%M:%S'), id)
+            cls.unwatch_device()
         cls.d.shell(['rm', dst])
 
     @classmethod
@@ -94,16 +111,22 @@ class BasePage(object):
         return driver
 
     @classmethod
-    def watch_device(cls):
-        '''wacther devices 如果存在元素则自动点击'''
+    def watch_device(cls, watch_list):
+        '''
+        如果存在元素则自动点击
+        :param watch_list: exp: watch_list=['允许','yes','跳过']
+        '''
         cls.d.watchers.watched = False
-        cls.d.watcher("ALERT").when(text="yes").click(text="yes")
-        cls.d.watcher("允许").when(text="允许").click(text="允许")
+        for i in watch_list:
+            cls.d.watcher(i).when(text=i).click(text=i)
+            # cls.d.watcher("允许").when(text="允许").click(text="允许")
+        print('Starting watcher,parameter is %s' % watch_list)
         cls.d.watchers.watched = True
 
     @classmethod
     def unwatch_device(cls):
         '''关闭watcher '''
+        print('Stop all watcher')
         cls.d.watchers.watched = False
 
     @classmethod
