@@ -80,14 +80,14 @@ class BasePage(object):
             cls.d(scrollable=True, resourceId="com.coloros.filemanager:id/viewPager").scroll.toEnd()
             time.sleep(0.5)
             cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
-            time.sleep(3)
+            time.sleep(5)
             if cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").exists:
-                cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").click()  # 继续安装旧版本
+                cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").click()
 
             elif cls.d(resourceId="android:id/button1", text=u"重新安装").exists:
-                raise Exception('已安装高版本，卸载后才能继续安装.')
-            elif cls.d(resourceId="android:id/button2", text=u"知道了").exists:    # 安装相同版本
-                cls.d(resourceId="android:id/button2", text=u"知道了").click()
+                cls.d(resourceId="android:id/button1", text=u"重新安装").click()
+            elif cls.d(resourceId="android:id/button2", text=u"知道了").exists:
+                raise Exception('以安装高版本，请卸载重装')
             else:
                 pass
             cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").wait()
@@ -99,10 +99,9 @@ class BasePage(object):
 
         else:
             cls.watch_device(['允许', '继续安装', '允许安装', '始终允许', '安装', '重新安装'])
-            cls.d.shell(['pm', 'install', '-r', dst])
-            r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
-            id = r.text.strip()
-            print(time.strftime('%H:%M:%S'), id)
+            cls.d.shell(['pm', 'install', '-r', dst], stream=True)
+            # id = r.text.strip()
+            # print(time.strftime('%H:%M:%S'), id)
             cls.unwatch_device()
         cls.d.shell(['rm', dst])
 
@@ -122,10 +121,11 @@ class BasePage(object):
 
     @classmethod
     def back(cls):
-        '''点击返回'''
-        time.sleep(0.5)
+        '''点击返回
+        页面没有加载完的时候，会出现返回失败的情况，使用前确认页面加载完成'''
+        time.sleep(1)
         cls.d.press('back')
-        time.sleep(0.5)
+        time.sleep(1)
 
 
     @classmethod
