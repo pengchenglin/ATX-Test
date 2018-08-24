@@ -56,6 +56,7 @@ class BasePage(object):
         '''
         file_name = os.path.basename(apk_path)
         dst = '/sdcard/' + file_name
+        print('start to install %s' % file_name)
         cls.d.push(apk_path, dst)
         print('start install %s' % dst)
         if cls.d.device_info['brand'] == 'vivo':
@@ -70,8 +71,34 @@ class BasePage(object):
             cls.d(resourceId="com.android.packageinstaller:id/continue_button").click()
             cls.d(resourceId="com.android.packageinstaller:id/ok_button").click()
             print(cls.d(resourceId="com.android.packageinstaller:id/checked_result").get_text())
+
+        elif cls.d.device_info['brand'] == 'OPPO':
+            cls.d.app_stop('com.coloros.filemanager')
+            cls.d.app_start('com.coloros.filemanager')
+            cls.d(resourceId="com.coloros.filemanager:id/action_file_browser").click()
+            cls.d(className="android.app.ActionBar$Tab", instance=1).click()
+            cls.d(scrollable=True, resourceId="com.coloros.filemanager:id/viewPager").scroll.toEnd()
+            time.sleep(0.5)
+            cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
+            time.sleep(3)
+            if cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").exists:
+                cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").click()  # 继续安装旧版本
+
+            elif cls.d(resourceId="android:id/button1", text=u"重新安装").exists:
+                raise Exception('已安装高版本，卸载后才能继续安装.')
+            elif cls.d(resourceId="android:id/button2", text=u"知道了").exists:    # 安装相同版本
+                cls.d(resourceId="android:id/button2", text=u"知道了").click()
+            else:
+                pass
+            cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").wait()
+            rect = cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").info['bounds']
+            x = rect['right'] / 2
+            y = rect['top'] + (rect['bottom'] - rect['top']) / 4
+            cls.d.click(x, y)
+            print(cls.d(resourceId="com.android.packageinstaller:id/done_button").get_text())
+
         else:
-            cls.watch_device(['允许', '继续安装', '允许安装', '始终允许'])
+            cls.watch_device(['允许', '继续安装', '允许安装', '始终允许', '安装', '重新安装'])
             cls.d.shell(['pm', 'install', '-r', dst])
             r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
             id = r.text.strip()
