@@ -7,6 +7,7 @@ from Public.BasePage import BasePage
 from Public.Decorator import *
 from PageObject import LoginPage
 import unittest
+from PageObject import XiaoYingActivity,XiaoYingActivity
 
 from Public.ReadConfig import ReadConfig
 apk_url = ReadConfig().get_apk_url()
@@ -31,9 +32,10 @@ class apk_install(unittest.TestCase, BasePage):
     @testcase
     def test_01_install_apk(self):
         '''安装启动android_app_bootstrap'''
-        # self.d.app_install(apk_url)
-        self.local_install(apk_path)
+        self.d.app_install(apk_url)
+        # self.local_install(apk_path)
         self.d.app_start(pkg_name)
+
 
         time.sleep(3)
         LoginPage.LoginPage().wait_page()

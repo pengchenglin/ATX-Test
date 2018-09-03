@@ -61,47 +61,73 @@ class BasePage(object):
         print('start install %s' % dst)
         if cls.d.device_info['brand'] == 'vivo':
             '''Vivo 手机通过打开文件管理 安装app'''
-            cls.d.app_stop('com.android.filemanager')
-            cls.d.app_start('com.android.filemanager')
-            cls.d(resourceId="com.android.filemanager:id/disk_info_parent").click()
-            cls.d(scrollable=True, resourceId="com.android.filemanager:id/file_listView").scroll.toEnd()
-            time.sleep(0.5)
-            print(file_name)
-            cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
-            cls.d(resourceId="com.android.packageinstaller:id/continue_button").click()
-            cls.d(resourceId="com.android.packageinstaller:id/ok_button").click()
-            print(cls.d(resourceId="com.android.packageinstaller:id/checked_result").get_text())
+            with cls.d.session("com.android.filemanager") as s:
+                s(resourceId="disk_info_parent").click()
+                s(resourceId="file_listView").scroll.to(textContains=file_name)
+                s(textContains=file_name).click()
+                s(resourceId="continue_button").click()
+                s(resourceId="ok_button").click()
+                print(s(resourceId="checked_result").get_text())
+
+            # cls.d.app_stop('com.android.filemanager')
+            # cls.d.app_start('com.android.filemanager')
+            # cls.d(resourceId="com.android.filemanager:id/disk_info_parent").click()
+            # cls.d(scrollable=True, resourceId="com.android.filemanager:id/file_listView").scroll.toEnd()
+            # time.sleep(1)
+            # print(file_name)
+            # cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
+            # cls.d(resourceId="com.android.packageinstaller:id/continue_button").click()
+            # cls.d(resourceId="com.android.packageinstaller:id/ok_button").click()
+            # print(cls.d(resourceId="com.android.packageinstaller:id/checked_result").get_text())
 
         elif cls.d.device_info['brand'] == 'OPPO':
-            cls.d.app_stop('com.coloros.filemanager')
-            cls.d.app_start('com.coloros.filemanager')
-            cls.d(resourceId="com.coloros.filemanager:id/action_file_browser").click()
-            cls.d(className="android.app.ActionBar$Tab", instance=1).click()
-            cls.d(scrollable=True, resourceId="com.coloros.filemanager:id/viewPager").scroll.toEnd()
-            time.sleep(0.5)
-            cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
-            time.sleep(5)
-            if cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").exists:
-                cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").click()
+            with cls.d.session("com.coloros.filemanager") as s:
+                s(text=u"所有文件").click()
+                s(className="android.widget.ListView").scroll.to(textContains=file_name)
+                s(textContains=file_name).click()
 
-            elif cls.d(resourceId="android:id/button1", text=u"重新安装").exists:
-                cls.d(resourceId="android:id/button1", text=u"重新安装").click()
-            elif cls.d(resourceId="android:id/button2", text=u"知道了").exists:
-                raise Exception('以安装高版本，请卸载重装')
-            else:
-                pass
-            cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").wait()
-            rect = cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").info['bounds']
-            x = rect['right'] / 2
-            y = rect['top'] + (rect['bottom'] - rect['top']) / 4
-            cls.d.click(x, y)
-            print(cls.d(resourceId="com.android.packageinstaller:id/done_button").get_text())
+                btn_done = cls.d(className="android.widget.Button", text=u"完成")
+                while not btn_done.exists:
+                    s(text="继续安装旧版本").click_exists()
+                    s(text="重新安装").click_exists()
+                    # 自动清除安装包和残留
+                    if s(resourceId=
+                         "com.android.packageinstaller:id/install_confirm_panel"
+                         ).exists:
+                        # 通过偏移点击<安装>
+                        s(resourceId=
+                          "com.android.packageinstaller:id/bottom_button_layout"
+                          ).click(offset=(0.75, 0.5))
+                btn_done.click()
+            # cls.d.app_stop('com.coloros.filemanager')
+            # cls.d.app_start('com.coloros.filemanager')
+            # cls.d(resourceId="com.coloros.filemanager:id/action_file_browser").click()
+            # cls.d(className="android.app.ActionBar$Tab", instance=1).click()
+            # cls.d(scrollable=True, resourceId="com.coloros.filemanager:id/viewPager").scroll.toEnd()
+            # time.sleep(1)
+            # cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
+            # time.sleep(4)
+            # if cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").exists:
+            #     cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").click()
+            #
+            # elif cls.d(resourceId="android:id/button1", text=u"重新安装").exists:
+            #     cls.d(resourceId="android:id/button1", text=u"重新安装").click()
+            # elif cls.d(resourceId="android:id/button2", text=u"知道了").exists:
+            #     raise Exception('以安装高版本，请卸载重装')
+            # else:
+            #     pass
+            # cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").wait()
+            # rect = cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").info['bounds']
+            # x = rect['right'] / 2
+            # y = rect['top'] + (rect['bottom'] - rect['top']) / 4
+            # cls.d.click(x, y)
+            # print(cls.d(resourceId="com.android.packageinstaller:id/done_button").get_text())
 
         else:
             cls.watch_device(['允许', '继续安装', '允许安装', '始终允许', '安装', '重新安装'])
-            cls.d.shell(['pm', 'install', '-r', dst], stream=True)
-            # id = r.text.strip()
-            # print(time.strftime('%H:%M:%S'), id)
+            r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
+            id = r.text.strip()
+            print(time.strftime('%H:%M:%S'), id)
             cls.unwatch_device()
         cls.d.shell(['rm', dst])
 

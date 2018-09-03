@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-e
+'''
+for循环 check_alive
+'''
 
 from Public.ReadConfig import ReadConfig
 from Public.ATX_Server import ATX_Server

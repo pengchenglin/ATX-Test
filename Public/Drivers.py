@@ -4,7 +4,10 @@ import zipfile
 
 from multiprocessing import Pool
 import uiautomator2 as u2
-from Public.Devices import *
+
+# from Public.Devices import *    # for循环 check_alive  比较慢
+from Public.Devices_new import *    # 多进程 check_alive ，Mac下需要配置  `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`到环境变量
+
 from Public.RunCases import RunCases
 from Public.ReportPath import ReportPath
 from Public.BasePage import BasePage
