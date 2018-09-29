@@ -65,7 +65,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
     @testcase
     def test_03_auto_click_alert(self):
         '''弹窗自动点击测试'''
-        self.watch_device()
+        self.watch_device("yes")
         HomePage().home_click()
         self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
         self.d(text='Alert').click()

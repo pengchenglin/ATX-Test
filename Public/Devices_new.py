@@ -17,7 +17,7 @@ def get_devices():
     '''get the devices from Pubilc/config.ini devices list
     return alive devices'''
     devices_ip = ReadConfig().get_devices_ip()
-    print('Connect devices from config devices IP list %s' % devices_ip)
+    print('Start check devices from config devices IP list: %s' % devices_ip)
     pool = Pool(processes=len(devices_ip))
     tmp_list = []
     for run in devices_ip:
@@ -35,7 +35,7 @@ def get_online_devices():
     '''get the devices from ATX-Server
     return alive devices'''
     devices = ATX_Server(ReadConfig().get_server_url()).online_devices()
-    print('There has %s online devices on ATX-Server' % len(devices))
+    print('Start check %s  devices on ATX-Server' % len(devices))
     if devices:
         pool = Pool(processes=len(devices))
         tmp_list = []
@@ -62,7 +62,7 @@ def connect_devices():
     valid_serials = [m[0] for m in matches if m[1] == 'device']
 
     if valid_serials:
-        print('There has %s devices connected on PC: ' % len(valid_serials))
+        print('Start check %s devices connected on PC: ' % len(valid_serials))
         pool = Pool(processes=len(valid_serials))
         tmp_list = []
         for run in valid_serials:
@@ -86,7 +86,9 @@ def check_alive(device):
             d.healthcheck()
             if d.alive:
                 print('%s is alive' % device['udid'])
-                return d.device_info
+                dict_tmp = d.device_info
+                dict_tmp['ip'] = device['ip']
+                return dict_tmp
             else:
                 print('%s is not alive' % device['udid'])
                 return None
@@ -98,8 +100,13 @@ def check_alive(device):
         if d.agent_alive:
             d.healthcheck()
             if d.alive:
-                print('%s is alive' % device)
-                return d.device_info
+                if re.match(r"(\d+\.\d+\.\d+\.\d)", device):
+                    dict_tmp = d.device_info
+                    dict_tmp['ip'] = device
+                    print('%s is alive' % device)
+                else:
+                    dict_tmp = d.device_info
+                return dict_tmp
             else:
                 print('%s is not alive' % device)
                 return None

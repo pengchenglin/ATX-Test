@@ -124,7 +124,7 @@ class BasePage(object):
             # print(cls.d(resourceId="com.android.packageinstaller:id/done_button").get_text())
 
         else:
-            cls.watch_device(['允许', '继续安装', '允许安装', '始终允许', '安装', '重新安装'])
+            cls.watch_device('允许|继续安装|允许安装|始终允许|安装|重新安装')
             r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
             id = r.text.strip()
             print(time.strftime('%H:%M:%S'), id)
@@ -164,16 +164,15 @@ class BasePage(object):
         return driver
 
     @classmethod
-    def watch_device(cls, watch_list):
+    def watch_device(cls, keyword):
         '''
         如果存在元素则自动点击
-        :param watch_list: exp: watch_list=['允许','yes','跳过']
+        :param keyword: exp: keyword="yes|允许|好的"
         '''
         cls.d.watchers.watched = False
-        for i in watch_list:
+        for i in keyword.split("|"):
             cls.d.watcher(i).when(text=i).click(text=i)
-            # cls.d.watcher("允许").when(text="允许").click(text="允许")
-        print('Starting watcher,parameter is %s' % watch_list)
+        print('Starting watcher,parameter is %s' % keyword.split("|"))
         cls.d.watchers.watched = True
 
     @classmethod

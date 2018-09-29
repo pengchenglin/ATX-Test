@@ -7,7 +7,7 @@ from Public.BasePage import BasePage
 from Public.Decorator import *
 from PageObject import LoginPage
 import unittest
-from PageObject import XiaoYingActivity,XiaoYingActivity
+
 
 from Public.ReadConfig import ReadConfig
 apk_url = ReadConfig().get_apk_url()
