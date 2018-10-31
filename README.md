@@ -1,5 +1,6 @@
 
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
+python2不支持 需要再python3上运行  本人python版本 3.6
 
 #### 前置条件
 Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
