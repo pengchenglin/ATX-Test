@@ -1,7 +1,7 @@
 
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
 
-# Python版本说明
+#### Python版本说明
 python2不支持 需要再python3上运行  本人python版本 3.6
 
 #### 前置条件
