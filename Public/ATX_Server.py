@@ -176,3 +176,6 @@ class ATX_Server(object):
         else:
             return False
 
+if __name__ == '__main__':
+    online_devices = ATX_Server('10.0.32.8:8000').online_devices()
+    print(online_devices)

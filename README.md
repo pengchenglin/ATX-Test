@@ -1,6 +1,9 @@
 
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
 
+#### Python版本说明
+python2不支持 需要在python3上运行  本人python版本 3.6
+
 #### 前置条件
 Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
 uiautomator版本需 Version: 0.1.3.dev5 及以后
@@ -38,7 +41,7 @@ uiautomator版本需 Version: 0.1.3.dev5 及以后
 
 **Public：** 
 
-- Devices.py 获取atx-server上特定设备（ATX_Server(object)）、或config.ini下devices IP列表的在线设备（get_devices()）、有线连接电脑的设备自动连接u2（connect_devices()）
+- Devices_new.py 获取atx-server上特定设备（get_online_devices()）、或config.ini下devices IP列表的在线设备（get_devices()）、有线连接电脑的设备自动连接u2（connect_devices()）
 - BasePage.py 用于设备的初始化 u2.connect  已经一些公共模块的封装
 - chromedriver.py 和Ports.py 结合使用，启动chromedriver以便实现u2的webview操作（目前还没做到根据设备的chromeversion 启动指定版本的chromedriver）
 - Casestrategy.py 获取指定路径下的testcases
@@ -47,7 +50,7 @@ uiautomator版本需 Version: 0.1.3.dev5 及以后
 - Test_data.py 在执行测试前的测试数据的生成，会在Plubic下生成data.json，测试执行的时候各个设设备更具自己的serial获取对应的测试数据
 - Drivers.py  设备的获取，初始化准备，测试执行都是在这里完成的
 - RunCases.py 存放测试报告/日志/截图的路径的生成，以及最终通过HTMLTestRunner来执行用例 
-- config.ini 一些需要用到的数据，tatx-server地址、测试设备的ip、测试数据等
+- config.ini 一些需要用到的数据，atx-server地址、测试设备的ip、测试数据等
 
 下面介绍一下流程：
 
@@ -79,21 +82,29 @@ if __name__ == '__main__':
 ```python
 def run(self, cases):
     # 根据method 获取android设备
-    method = ReadConfig().get_atx_server('method').strip()
-    if method == 'host':
+    method = ReadConfig().get_method().strip()
+    if method == 'SERVER':
         # get ATX-Server Online devices
-        devices = ATX_Server(ReadConfig().get_url()).online_devices()
+        # devices = ATX_Server(ReadConfig().get_server_url()).online_devices()
+        print('Checking available online devices from ATX-Server...')
+        devices = get_online_devices()
         print('\nThere has %s online devices in ATX-Server' % len(devices))
-    elif method == 'devices':
+    elif method == 'IP':
         # get  devices from config devices list
+        print('Checking available IP devices from config... ')
         devices = get_devices()
-        print('\nThere has %s  devices alive in config list' % len(devices))
+        print('\nThere has %s  devices alive in config IP list' % len(devices))
+    elif method == 'USB':
+        # get  devices connected PC with USB
+        print('Checking available USB devices connected on PC... ')
+        devices = connect_devices()
+        print('\nThere has %s  USB devices alive ' % len(devices))
+
     else:
         raise Exception('Config.ini method illegal:method =%s' % method)
 
-
     if not devices:
-        print('There is no device found')
+        print('There is no device found,test over.')
         return
 
     # generate test data data.json 准备测试数据
@@ -114,7 +125,7 @@ def run(self, cases):
     pool.join()
     print('All runs done........ ')
     ChromeDriver.kill()
-    
+
     #  Generate statistics report  生成统计测试报告 将所有设备的报告在一个HTML中展示
     create_statistics_report(runs)
 ```
