@@ -13,7 +13,7 @@ import six
 from selenium import webdriver
 import psutil as pt
 import os
-
+import platform
 
 if six.PY3:
     import subprocess
@@ -59,6 +59,7 @@ class ChromeDriver(object):
             selenium driver
         """
         app = self._d.current_app()
+        # print(app)
         capabilities = {
             'chromeOptions': {
                 'androidDeviceSerial': device_ip or self._d.serial,
@@ -68,6 +69,7 @@ class ChromeDriver(object):
                 'androidActivity': activity or app['activity'],
             }
         }
+        # print(capabilities)
 
         try:
             dr = webdriver.Remote('http://localhost:%d' % self._port, capabilities)
@@ -81,25 +83,28 @@ class ChromeDriver(object):
 
     @staticmethod
     def kill():
-        # # for windows
-        # pid = getPidByName('chromedriver.exe')
-        # for i in pid:
-        #     os.popen('taskkill /PID %d /F' % i)
 
-        # # for mac
-        pid = getPidByName('chromedriver')
-        for i in pid:
-            os.popen('kill -9 %d' % i)
+        if platform.system()=='Windows':
+            # for windows
+            pid = getPidByName('chromedriver.exe')
+            for i in pid:
+                os.popen('taskkill /PID %d /F' % i)
+        else:
+            # # for mac
+            pid = getPidByName('chromedriver')
+            for i in pid:
+                os.popen('kill -9 %d' % i)
 
         print('All chromedriver pid killed')
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     import uiautomator2 as u2
 
-    # d = u2.connect()
-    # driver = ChromeDriver(d).driver()
-    # elem = driver.find_element_by_link_text(u"登录")
-    # elem.click()
-    # driver.quit()
-    # ChromeDriver.kill()
+    d = u2.connect()
+    driver = ChromeDriver(d, 3456).driver()
+    elem = driver.find_element_by_link_text(u"百度一下")
+    elem.click()
+    driver.quit()
+    ChromeDriver.kill()
+    print(platform.system())

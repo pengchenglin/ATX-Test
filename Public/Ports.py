@@ -1,15 +1,18 @@
 import os
+import platform
 
 
 class Ports:
     @staticmethod
     def is_using(port):
         """判断端口号是否被占用"""
-        # Mac OS
-        cmd = "netstat -an | grep %s" % port
 
-        # Windows
-        # cmd = "netstat -an | findstr %s" % port
+        if platform.system() == 'Windows':
+            # Windows
+            cmd = "netstat -an | findstr %s" % port
+        else:
+            # Mac OS
+            cmd = "netstat -an | grep %s" % port
 
         if os.popen(cmd).readlines():
             return True

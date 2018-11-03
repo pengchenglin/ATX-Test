@@ -69,17 +69,6 @@ class BasePage(object):
                 s(resourceId="ok_button").click()
                 print(s(resourceId="checked_result").get_text())
 
-            # cls.d.app_stop('com.android.filemanager')
-            # cls.d.app_start('com.android.filemanager')
-            # cls.d(resourceId="com.android.filemanager:id/disk_info_parent").click()
-            # cls.d(scrollable=True, resourceId="com.android.filemanager:id/file_listView").scroll.toEnd()
-            # time.sleep(1)
-            # print(file_name)
-            # cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
-            # cls.d(resourceId="com.android.packageinstaller:id/continue_button").click()
-            # cls.d(resourceId="com.android.packageinstaller:id/ok_button").click()
-            # print(cls.d(resourceId="com.android.packageinstaller:id/checked_result").get_text())
-
         elif cls.d.device_info['brand'] == 'OPPO':
             with cls.d.session("com.coloros.filemanager") as s:
                 s(text=u"所有文件").click()
@@ -99,32 +88,8 @@ class BasePage(object):
                           "com.android.packageinstaller:id/bottom_button_layout"
                           ).click(offset=(0.75, 0.5))
                 btn_done.click()
-            # cls.d.app_stop('com.coloros.filemanager')
-            # cls.d.app_start('com.coloros.filemanager')
-            # cls.d(resourceId="com.coloros.filemanager:id/action_file_browser").click()
-            # cls.d(className="android.app.ActionBar$Tab", instance=1).click()
-            # cls.d(scrollable=True, resourceId="com.coloros.filemanager:id/viewPager").scroll.toEnd()
-            # time.sleep(1)
-            # cls.d(className="android.widget.LinearLayout").child(text=file_name).click()
-            # time.sleep(4)
-            # if cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").exists:
-            #     cls.d(resourceId="com.android.packageinstaller:id/btn_continue_install_old").click()
-            #
-            # elif cls.d(resourceId="android:id/button1", text=u"重新安装").exists:
-            #     cls.d(resourceId="android:id/button1", text=u"重新安装").click()
-            # elif cls.d(resourceId="android:id/button2", text=u"知道了").exists:
-            #     raise Exception('以安装高版本，请卸载重装')
-            # else:
-            #     pass
-            # cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").wait()
-            # rect = cls.d(resourceId="com.android.packageinstaller:id/bottom_button_layout").info['bounds']
-            # x = rect['right'] / 2
-            # y = rect['top'] + (rect['bottom'] - rect['top']) / 4
-            # cls.d.click(x, y)
-            # print(cls.d(resourceId="com.android.packageinstaller:id/done_button").get_text())
-
         else:
-            cls.watch_device(['允许', '继续安装', '允许安装', '始终允许', '安装', '重新安装'])
+            cls.watch_device('允许|继续安装|允许安装|始终允许|安装|重新安装')
             r = cls.d.shell(['pm', 'install', '-r', dst], stream=True)
             id = r.text.strip()
             print(time.strftime('%H:%M:%S'), id)
@@ -164,16 +129,15 @@ class BasePage(object):
         return driver
 
     @classmethod
-    def watch_device(cls, watch_list):
+    def watch_device(cls, keyword):
         '''
         如果存在元素则自动点击
-        :param watch_list: exp: watch_list=['允许','yes','跳过']
+        :param keyword: exp: keyword="yes|允许|好的|跳过"
         '''
         cls.d.watchers.watched = False
-        for i in watch_list:
+        for i in keyword.split("|"):
             cls.d.watcher(i).when(text=i).click(text=i)
-            # cls.d.watcher("允许").when(text="允许").click(text="允许")
-        print('Starting watcher,parameter is %s' % watch_list)
+        print('Starting watcher,parameter is %s' % keyword.split("|"))
         cls.d.watchers.watched = True
 
     @classmethod
@@ -201,7 +165,7 @@ class BasePage(object):
         '''截图并打印特定格式的输出，保证用例显示截图'''
         date_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         screenshot_name = cls.__qualname__ + '-' + date_time + '.PNG'
-        path = ReportPath().get_path() + '/' + screenshot_name
+        path = os.path.join(ReportPath().get_path(), screenshot_name)
         cls.d.screenshot(path)
         print('IMAGE:' + screenshot_name)
 
