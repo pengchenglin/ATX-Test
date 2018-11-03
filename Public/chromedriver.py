@@ -40,6 +40,7 @@ class ChromeDriver(object):
     def _launch_webdriver(self):
         # print("start chromedriver instance")
         p = subprocess.Popen(['chromedriver', '--port=' + str(self._port)])
+
         try:
             p.wait(timeout=2.0)
             return False
@@ -59,7 +60,6 @@ class ChromeDriver(object):
             selenium driver
         """
         app = self._d.current_app()
-        # print(app)
         capabilities = {
             'chromeOptions': {
                 'androidDeviceSerial': device_ip or self._d.serial,
@@ -69,13 +69,8 @@ class ChromeDriver(object):
                 'androidActivity': activity or app['activity'],
             }
         }
-        # print(capabilities)
-
-        try:
-            dr = webdriver.Remote('http://localhost:%d' % self._port, capabilities)
-        except URLError:
-            self._launch_webdriver()
-            dr = webdriver.Remote('http://localhost:%d' % self._port, capabilities)
+        self._launch_webdriver()
+        dr = webdriver.Remote('http://localhost:%d' % self._port, capabilities)
 
         # always quit driver when done
         atexit.register(dr.quit)
@@ -102,9 +97,12 @@ if __name__ == '__main__':
     import uiautomator2 as u2
 
     d = u2.connect()
-    driver = ChromeDriver(d, 3456).driver()
-    elem = driver.find_element_by_link_text(u"百度一下")
-    elem.click()
-    driver.quit()
+    dri = ChromeDriver(d, 3456).driver()
+    # dr = webdriver.Chrome()
+    dri.find_element_by_id('index-kw').send_keys('python')
+
+    dri.find_element_by_id('index-bn').click()
+    # elem = driver.find_element_by_link_text(u"index-kw")
+    dri.quit()
     ChromeDriver.kill()
     print(platform.system())
