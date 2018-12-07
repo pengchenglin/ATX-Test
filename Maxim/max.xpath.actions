@@ -1,0 +1,22 @@
+[
+  {
+    "prob": 1,
+    "actions": [
+      {
+        "xpath": "//*[@resource-id='com.quvideo.xiaoying:id/xiaoying_alert_dialog_positive']",
+        "action": "CLICK",
+        "index": 0,
+        "throttle": 500
+      }]
+  },
+  {
+    "prob": 1,
+    "actions": [
+      {
+        "xpath": "//*[@resource-id='com.android.packageinstaller:id/permission_allow_button']",
+        "action": "CLICK",
+        "index": 0,
+        "throttle": 500
+      }]
+  }
+]

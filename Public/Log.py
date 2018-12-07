@@ -31,6 +31,7 @@ class Log:
 
     def i(self, msg, *args, **kwargs):
         self.logger.info(msg, *args, **kwargs)
+        print(msg, *args, **kwargs)
 
     def w(self, msg, *args, **kwargs):
         self.logger.warning(msg, *args, **kwargs)
