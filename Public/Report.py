@@ -59,7 +59,8 @@ def create_statistics_report(runs):
     report_path_list = []
     for run in runs:
         tmp_dic = {}
-        tmp_dic['urls'] = re.findall("./TestReport/(.+$)", run.get_path())[0] + "/TestReport.html"
+        # tmp_dic['urls'] = re.findall("./TestReport/(.+$)", run.get_path())[0] + "/TestReport.html"
+        tmp_dic['urls'] = os.path.split(run.get_path())[1] + "/TestReport.html"
         tmp_dic['name'] = run.get_device()['model'] + "自动化测试报告"
         tmp_dic.update(_get_report_info(run))
         report_path_list.append(tmp_dic)
@@ -95,3 +96,7 @@ def zip_report():
             # z.write(os.path.join(dirpath, filename))
     z.close()
     print('Generate zip_report file %s completed........ ' % file_news)
+
+
+# if __name__ == '__main__':
+#     print(os.path.split('D:\\GitHub_Project\\ATX-Test\\TestSuite_demo\\TestReport\\2018-11-04_00_46_04ce051715b2ef600802-30_07_4d_db_da_82-SM-G950F'))
