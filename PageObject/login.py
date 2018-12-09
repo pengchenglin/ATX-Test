@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from Public.BasePage import BasePage
+from Public.maxim_monkey import Maxim
 from Public.Decorator import *
 from uiautomator2 import UiObjectNotFoundError
 
 
-class LoginPage(BasePage):
+class login_page(BasePage):
     @teststep
     def wait_page(self):
         try:
@@ -18,17 +19,23 @@ class LoginPage(BasePage):
 
     @teststep
     def input_username(self, text):
+        log.i('输入用户名:%s'% text)
         self.d(resourceId="com.github.android_app_bootstrap:id/mobileNoEditText") \
             .set_text(text)
 
     @teststep
-    def inputpassword(self, text):
+    def input_password(self, text):
+        log.i('输入密码:%s'% text)
         self.d(resourceId="com.github.android_app_bootstrap:id/codeEditText") \
             .set_text(text)
 
     @teststep
-    def login_click(self):
-        self.d(text='Login').click()
+    def click_login_btn(self):
+        log.i('点击登录按钮')
+        self.d(resourceId="com.github.android_app_bootstrap:id/login_button").click()
+
+
+
 
 
 def login(username, password):

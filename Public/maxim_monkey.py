@@ -5,17 +5,20 @@ from logzero import logger
 import time
 import os
 
-
 from Public.BasePage import BasePage
 from Public.Decorator import *
 from uiautomator2 import UiObjectNotFoundError
 
 from Public.Log import Log
+
 log = Log()
+maxin_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'Maxim')
+
 
 # 参考网站：
 # Maxim-高速 Android Monkey 工具使用记录： https://testerhome.com/topics/11884
 # 基于 Android Monkey 二次开发，实现高速点击的 Android Monkey 自动化工具 fastmonkey ：https://testerhome.com/topics/11719
+
 
 class Maxim(BasePage):
 
@@ -83,7 +86,7 @@ class Maxim(BasePage):
         :param widget_black: 黑控件 黑区域屏蔽 max.widget.black文件需要配置正确
         :return:
         '''
-        print(monkey_shell)
+        log.i('MONKEY_SHELL:%s' % monkey_shell)
         cls.clear_env()
         cls.push_jar()
         if monkey_shell.find('awl.strings') != -1:
@@ -105,25 +108,26 @@ class Maxim(BasePage):
         log.i('Maxim monkey run end>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         # restore uiautomator server
         cls.d.service('uiautomator').start()
+
     @classmethod
     def push_jar(cls):
-        cls.d.push('./Maxim/monkey.jar', '/sdcard/')
-        cls.d.push('./Maxim/framework.jar', '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'monkey.jar'), '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'framework.jar'), '/sdcard/')
         log.i('push jar file--->monkey.jar framework.jar')
 
     @classmethod
     def push_white_list(cls):
-        cls.d.push('./Maxim/awl.strings', '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'awl.strings'), '/sdcard/')
         log.i('push white_list file---> awl.strings ')
 
     @classmethod
     def push_actions(cls):
-        cls.d.push('./Maxim/max.xpath.actions', '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'max.xpath.actions'), '/sdcard/')
         log.i('push actions file---> max.xpath.actions ')
 
     @classmethod
     def push_selector(cls):
-        cls.d.push('./Maxim/max.xpath.selector', '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'max.xpath.selector'), '/sdcard/')
         log.i('push selector file---> max.xpath.selector ')
 
     @classmethod
@@ -133,7 +137,7 @@ class Maxim(BasePage):
 
     @classmethod
     def push_string(cls):
-        cls.d.push('./Maxim/max.strings', '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'max.strings'), '/sdcard/')
         log.i('push string file---> max.strings ')
 
     @classmethod
@@ -158,28 +162,18 @@ class Maxim(BasePage):
         ime = cls.d.shell('ime list -s').output
         if 'adbkeyboard' in ime:
             cls.d.shell('ime set com.android.adbkeyboard/.AdbIME')
-            log.i('Set adbkeyboard as default')
         else:
-            cls.local_install('./apk/ADBKeyBoard.apk')
+            cls.local_install(os.path.join(maxin_path, 'ADBKeyBoard.apk'))
             cls.d.shell('ime enable com.android.adbkeyboard/.AdbIME')
             cls.d.shell('ime set com.android.adbkeyboard/.AdbIME')
             log.i('install adbkeyboard and set as default')
         cls.push_string()
 
 
-
-
 if __name__ == '__main__':
-    device = Maxim()
-    device.set_driver('192.168.3.26')
-    device.d.healthcheck()
-    # # device.clear_env()
-    command = device.command(package='com.quvideo.xiaoying', runtime=2, mode='uiautomatormix', throttle=100,
-                             options=' -v -v ', whitelist=False, off_line=True)
-    print(command)
-    device.run_monkey(command)
-    # print(device.d.shell(command))
-
-    string = "CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --uiautomatormix --running-minutes 2 -v -v"
-    print(string)
-    # device.d.shell(string)
+    log.set_logger('udid', './log.log')
+    maxim = Maxim()
+    maxim.set_driver(None)
+    command = maxim.command(package='com.quvideo.xiaoying', runtime=2, mode='uiautomatormix', throttle=100,
+                            options=' -v -v ', whitelist=True, off_line=True)
+    maxim.run_monkey(command)

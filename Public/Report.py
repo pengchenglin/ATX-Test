@@ -30,9 +30,10 @@ def create_index_html(path_list):
         f.write(html)
         f.close()
 
+
 def _get_report_info(run):
     '''获取每个设备报告的参数'''
-    report = run.test_report_path + '/TestReport.html'
+    report = os.path.join(run.test_report_path, '/TestReport.html')
     result = {}
     with open(report, 'r', encoding='utf-8') as f:
         res_str = re.findall("测试结果(.+%)", f.read())
@@ -52,7 +53,6 @@ def _get_report_info(run):
     return result
 
 
-
 def create_statistics_report(runs):
     '''根据运行设备的数量生成统计报告，路径为
     ./TestReport/自动化测试报告.html'''
@@ -68,18 +68,19 @@ def create_statistics_report(runs):
     print('Generate statistics report completed........ ')
 
 
-def backup_report():
+def backup_report(report_path, backup_path, time):
     '''备份旧报告 TestReport文件夹'''
-    if not os.path.exists("./TestReport_backup"):
-        os.mkdir("./TestReport_backup")
-    if not os.path.exists("./TestReport"):
-        os.mkdir("./TestReport")
-    date_time = time.strftime('%Y-%m-%d_%H_%M_%S', time.localtime(time.time()))
-    try:
-        os.rename('./TestReport', './TestReport_backup/Backup_' + date_time)
-    except PermissionError as e:
-        raise e
-    print('Backup TestReport dir success')
+    if not os.path.exists(backup_path):
+        os.mkdir(backup_path)
+    if not os.path.exists(report_path):
+        pass
+    else:
+        try:
+            os.rename(report_path, os.path.join(backup_path, 'Report_' + time))
+        except PermissionError as e:
+            raise e
+        print('Backup TestReport dir success')
+
 
 
 def zip_report():
@@ -96,7 +97,3 @@ def zip_report():
             # z.write(os.path.join(dirpath, filename))
     z.close()
     print('Generate zip_report file %s completed........ ' % file_news)
-
-
-# if __name__ == '__main__':
-#     print(os.path.split('D:\\GitHub_Project\\ATX-Test\\TestSuite_demo\\TestReport\\2018-11-04_00_46_04ce051715b2ef600802-30_07_4d_db_da_82-SM-G950F'))

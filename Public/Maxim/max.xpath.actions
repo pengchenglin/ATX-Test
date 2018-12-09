@@ -3,7 +3,7 @@
     "prob": 1,
     "actions": [
       {
-        "xpath": "//*[@resource-id='com.quvideo.xiaoying:id/xiaoying_alert_dialog_positive']",
+        "xpath": "//android.widget.Button[@text='list']",
         "action": "CLICK",
         "index": 0,
         "throttle": 500
@@ -13,7 +13,7 @@
     "prob": 1,
     "actions": [
       {
-        "xpath": "//*[@resource-id='com.android.packageinstaller:id/permission_allow_button']",
+        "xpath": "//android.widget.Button[@text='Login']",
         "action": "CLICK",
         "index": 0,
         "throttle": 500

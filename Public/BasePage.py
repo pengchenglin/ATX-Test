@@ -139,11 +139,13 @@ class BasePage(object):
             cls.d.watcher(i).when(text=i).click(text=i)
         print('Starting watcher,parameter is %s' % keyword.split("|"))
         cls.d.watchers.watched = True
+        time.sleep(2)
 
     @classmethod
     def unwatch_device(cls):
         '''关闭watcher '''
         print('Stop all watcher')
+        cls.d.watchers.remove()
         cls.d.watchers.watched = False
 
     @classmethod
@@ -164,7 +166,7 @@ class BasePage(object):
     def screenshot(cls):
         '''截图并打印特定格式的输出，保证用例显示截图'''
         date_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        screenshot_name = cls.__qualname__ + '-' + date_time + '.PNG'
+        screenshot_name = 'Manual_' + date_time + '.PNG'
         path = os.path.join(ReportPath().get_path(), screenshot_name)
         cls.d.screenshot(path)
         print('IMAGE:' + screenshot_name)

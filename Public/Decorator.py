@@ -4,6 +4,7 @@ from functools import wraps
 from Public.BasePage import BasePage
 from Public.ReportPath import ReportPath
 from Public.Log import Log
+import os
 
 flag = 'IMAGE:'
 log = Log()
@@ -12,11 +13,10 @@ log = Log()
 def _screenshot(name):
     date_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
     screenshot = name + '-' + date_time + '.PNG'
-    path = ReportPath().get_path() + '/' + screenshot
-
+    # path = ReportPath().get_path() + '/' + screenshot
+    path = os.path.join(ReportPath().get_path(), screenshot)
     driver = BasePage().get_driver()
     driver.screenshot(path)
-
     return screenshot
 
 
@@ -24,7 +24,7 @@ def teststep(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            log.i('\t--> %s', func.__qualname__)
+            log.i('--> %s' % func.__qualname__)
             ret = func(*args, **kwargs)
             return ret
         except AssertionError as e:
@@ -51,9 +51,9 @@ def teststeps(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            log.i('  --> %s', func.__qualname__)
+            log.i('--> %s' % func.__qualname__)
             ret = func(*args, **kwargs)
-            log.i('  <-- %s, %s', func.__qualname__, 'Success')
+            log.d('  <-- %s, %s', func.__qualname__, 'Success')
             return ret
         except AssertionError as e:
             log.e('AssertionError, %s', e)
@@ -79,9 +79,9 @@ def _wrapper(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            log.i('--> %s', func.__qualname__)
+            log.d('--> %s', func.__qualname__)
             ret = func(*args, **kwargs)
-            log.i('<-- %s, %s\n', func.__qualname__, 'Success')
+            log.d('<-- %s, %s\n', func.__qualname__, 'Success')
             return ret
         except AssertionError as e:
             log.e('AssertionError, %s', e)

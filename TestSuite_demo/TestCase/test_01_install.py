@@ -5,7 +5,7 @@ import uiautomator2 as u2
 import time
 from Public.BasePage import BasePage
 from Public.Decorator import *
-from PageObject import LoginPage
+from PageObject import login
 import unittest
 
 from Public.ReadConfig import ReadConfig
@@ -29,11 +29,12 @@ class apk_install(unittest.TestCase, BasePage):
     @testcase
     def test_01_install_apk(self):
         '''安装启动android_app_bootstrap'''
+        self.d.app_uninstall(pkg_name)
         # self.d.app_install(apk_url)
         self.local_install(apk_path)
         self.d.app_start(pkg_name)
         time.sleep(3)
-        LoginPage.LoginPage().wait_page()
+        login.login_page().wait_page()
 
 
     @testcase

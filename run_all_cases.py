@@ -10,7 +10,8 @@ from Public.Report import *
 
 if __name__ == '__main__':
     # back up old report dir 备份旧的测试报告文件夹到TestReport_backup下
-    backup_report()
+    now = time.strftime('%Y%m%d%H%M', time.localtime(time.time()))
+    backup_report('./TestReport', './TestReport_History', now)
 
     cs = CaseStrategy()
     cases = cs.collect_cases(suite=True)

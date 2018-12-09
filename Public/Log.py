@@ -5,13 +5,13 @@ class Log:
     @classmethod
     def set_logger(cls, udid, file):
         logger = logging.getLogger('ATX')
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
-        fh = logging.FileHandler(file)
-        fh.setLevel(logging.INFO)
+        fh = logging.FileHandler(file,encoding='utf-8')
+        fh.setLevel(logging.DEBUG)
 
         ch = logging.StreamHandler()
-        ch.setLevel(logging.INFO)
+        ch.setLevel(logging.DEBUG)
 
         formatter = logging.Formatter('%(asctime)s'
                                       + ' - %s' % udid
