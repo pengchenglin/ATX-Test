@@ -101,6 +101,7 @@ class Maxim(BasePage):
         runtime = monkey_shell.split('running-minutes ')[1].split(' ')[0]
         log.i('starting run monkey')
         log.i('It will be take about %s minutes,please be patient ...........................' % runtime)
+        # restore uiautomator server
         cls.d.service('uiautomator').stop()
         time.sleep(2)
         cls.d.shell(monkey_shell)

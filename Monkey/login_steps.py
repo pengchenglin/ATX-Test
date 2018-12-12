@@ -18,7 +18,6 @@ class abcd(unittest.TestCase, BasePage):
     def setUpClass(cls):
         cls.d.app_stop_all()
 
-
     @testcase
     def test_install_login(self):
         '''安装启动android_app_bootstrap'''

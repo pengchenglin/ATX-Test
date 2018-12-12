@@ -3,5 +3,5 @@ com.github.android_app_bootstrap.activity.WebviewActivity
 com.github.android_app_bootstrap.activity.WelcomeActivity
 com.github.android_app_bootstrap.activity.TabBarActivity
 com.github.android_app_bootstrap.activity.TableActivity
-com.github.android_app_bootstrap.activity.AlertActivity
+
 

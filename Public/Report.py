@@ -33,7 +33,7 @@ def create_index_html(path_list):
 
 def _get_report_info(run):
     '''获取每个设备报告的参数'''
-    report = os.path.join(run.test_report_path, '/TestReport.html')
+    report = os.path.join(run.test_report_path, 'TestReport.html')
     result = {}
     with open(report, 'r', encoding='utf-8') as f:
         res_str = re.findall("测试结果(.+%)", f.read())
