@@ -23,7 +23,8 @@ maxin_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'Maxim')
 class Maxim(BasePage):
 
     @classmethod
-    def command(self, package, runtime, mode=None, whitelist=False, throttle=None, options=None, off_line=True):
+    def command(self, package, runtime, mode=None, whitelist=False, blacklist=False, throttle=None, options=None,
+                off_line=True):
         '''
         monkey命令封装
         :param package:被测app的包名
@@ -35,6 +36,7 @@ class Maxim(BasePage):
             uiautomatortroy：TROY模式（支持特殊事件、黑控件等） 配置 max.xpath.selector troy控件选择子来定制自有的控件选择优先级
             None: 默认原生 monkey
         :param whitelist: activity白名单  需要将awl.strings 配置正确
+        :param blacklist: activity黑名单  需要将awl.strings 配置正确
         :param throttle: 在事件之间插入固定的时间（毫秒）延迟
         :param options: 其他参数及用法同原始Monkey
         :param off_line: 是否脱机运行 默认Ture
@@ -59,14 +61,18 @@ class Maxim(BasePage):
             whitelist = ' --act-whitelist-file /sdcard/awl.strings'
         else:
             whitelist = ''
+        if blacklist:
+            blacklist = ' --act-blacklist-file /sdcard/awl.strings'
+        else:
+            blacklist = ''
 
         off_line_cmd = ' >/sdcard/monkeyout.txt 2>/sdcard/monkeyerr.txt &'
         if off_line:
             monkey_shell = (
-                ''.join([classpath, package, runtime, mode, whitelist, throttle, options, off_line_cmd]))
+                ''.join([classpath, package, runtime, mode, whitelist, blacklist, throttle, options, off_line_cmd]))
         else:
             monkey_shell = (
-                ''.join([classpath, package, runtime, mode, whitelist, throttle, options]))
+                ''.join([classpath, package, runtime, mode, whitelist, blacklist, throttle, options]))
 
         return monkey_shell
 
