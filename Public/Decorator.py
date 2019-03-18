@@ -30,19 +30,21 @@ def teststep(func):
         except AssertionError as e:
             log.e('AssertionError, %s', e)
             log.e('\t<-- %s, %s, %s', func.__qualname__, 'AssertionError', 'Error')
+            raise AssertionError(e)
 
-            if flag in str(e):
-                raise AssertionError(e)
-            else:
-                raise AssertionError(flag + _screenshot(func.__qualname__))
+            # if flag in str(e):
+            #     raise AssertionError(e)
+            # else:
+            #     raise AssertionError(flag + _screenshot(func.__qualname__))
         except Exception as e:
             log.e('Exception, %s', e)
             log.e('\t<-- %s, %s, %s', func.__qualname__, 'Exception', 'Error')
+            raise Exception(e)
 
-            if flag in str(e):
-                raise Exception(e)
-            else:
-                raise Exception(flag + _screenshot(func.__qualname__))
+            # if flag in str(e):
+            #     raise Exception(e)
+            # else:
+            #     raise Exception(flag + _screenshot(func.__qualname__))
 
     return wrapper
 
@@ -58,19 +60,21 @@ def teststeps(func):
         except AssertionError as e:
             log.e('AssertionError, %s', e)
             log.e('  <-- %s, %s, %s', func.__qualname__, 'AssertionError', 'Error')
+            raise AssertionError(e)
 
-            if flag in str(e):
-                raise AssertionError(e)
-            else:
-                raise AssertionError(flag + _screenshot(func.__qualname__))
+            # if flag in str(e):
+            #     raise AssertionError(e)
+            # else:
+            #     raise AssertionError(flag + _screenshot(func.__qualname__))
         except Exception as e:
             log.e('Exception, %s', e)
             log.e('  <-- %s, %s, %s', func.__qualname__, 'Exception', 'Error')
+            raise Exception(e)
 
-            if flag in str(e):
-                raise Exception(e)
-            else:
-                raise Exception(flag + _screenshot(func.__qualname__))
+            # if flag in str(e):
+            #     raise Exception(e)
+            # else:
+            #     raise Exception(flag + _screenshot(func.__qualname__))
 
     return wrapper
 
