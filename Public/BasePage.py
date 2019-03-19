@@ -6,6 +6,7 @@ import re
 from Public.chromedriver import ChromeDriver
 from Public.Ports import Ports
 from Public.ReportPath import ReportPath
+from Public.Test_data import get_apk_info
 
 import warnings
 
@@ -54,8 +55,10 @@ class BasePage(object):
         安装本地apk 覆盖安装，不需要usb链接
         :param apk_path: apk文件本地路径
         '''
+        packagename = get_apk_info(apk_path)['package']
+
         file_name = os.path.basename(apk_path)
-        dst = '/sdcard/' + file_name
+        dst = '/data/local/tmp/' + file_name
         print('start to install %s' % file_name)
         cls.d.push(apk_path, dst)
         print('start install %s' % dst)
@@ -94,7 +97,11 @@ class BasePage(object):
             id = r.text.strip()
             print(time.strftime('%H:%M:%S'), id)
             cls.unwatch_device()
-        cls.d.shell(['rm', dst])
+        packages = list(map(lambda p: p.split(':')[1], cls.d.shell('pm list packages').output.splitlines()))
+        if packagename in packages:
+            cls.d.shell(['rm', dst])
+        else:
+            raise Exception('%s 安装失败' % apk_path)
 
     @classmethod
     def unlock_device(cls):

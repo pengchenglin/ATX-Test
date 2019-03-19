@@ -5,9 +5,12 @@ from Public.BasePage import BasePage
 from Public.ReportPath import ReportPath
 from Public.Log import Log
 import os
+import imageio
+import shutil
 
 flag = 'IMAGE:'
 log = Log()
+
 
 
 def _screenshot(name):
@@ -19,6 +22,41 @@ def _screenshot(name):
     driver.screenshot(path)
     return screenshot
 
+def _screenshot_for_gif():
+    tmp_path = os.path.join(ReportPath().get_path(),'tmp')
+    if not os.path.exists(tmp_path):
+        os.mkdir(tmp_path)
+    tmpshot = str(round(time.time()*1000)) + '.PNG'
+    # path = ReportPath().get_path() + '/' + screenshot
+    path = os.path.join(tmp_path, tmpshot)
+    driver = BasePage().get_driver()
+    driver.screenshot(path)
+    return path
+
+
+def _create_gif(duration=0.3):
+    '''
+    生成gif文件，原始图片仅支持png格式
+    gif_name ： 字符串，所生成的 gif 文件名，带 .gif 后缀
+    path :      需要合成为 gif 的图片所在路径
+    duration :  gif 图像时间间隔
+    '''
+
+    frames = []
+    path = os.path.join(ReportPath().get_path(),'tmp')
+    if not os.path.exists(path):
+        pass
+    else:
+        pngFiles = os.listdir(path)
+        image_list = [os.path.join(path, f) for f in pngFiles]
+        for image_name in image_list:
+            # 读取 png 图像文件
+            frames.append(imageio.imread(image_name))
+        # 保存为 gif
+        gif_name = str(round(time.time() * 1000)) + '.gif'
+        imageio.mimsave(gif_name, frames, 'GIF', duration=duration)
+        shutil.rmtree(path)
+        return gif_name
 
 def teststep(func):
     @wraps(func)
@@ -45,6 +83,8 @@ def teststep(func):
             #     raise Exception(e)
             # else:
             #     raise Exception(flag + _screenshot(func.__qualname__))
+        finally:
+            _screenshot_for_gif()
 
     return wrapper
 
@@ -75,6 +115,8 @@ def teststeps(func):
             #     raise Exception(e)
             # else:
             #     raise Exception(flag + _screenshot(func.__qualname__))
+        finally:
+            _screenshot_for_gif()
 
     return wrapper
 
@@ -107,6 +149,15 @@ def _wrapper(func):
     return wrapper
 
 
+def gif(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        ret = func(*args, **kwargs)
+        log.i(flag+_create_gif())
+        return ret
+    return wrapper()
+
+
 def testcase(func):
     return _wrapper(func)
 
@@ -125,3 +176,7 @@ def setupclass(func):
 
 def teardownclass(func):
     return _wrapper(func)
+
+
+
+

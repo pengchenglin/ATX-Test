@@ -26,3 +26,36 @@ def get_test_data(d):
     with open(data_path, 'r') as f:
         data = json.load(f)
     return data[d.device_info['serial']]
+
+
+import apkutils
+
+def get_apk_info(path):
+    tmp = apkutils.APK(path).get_manifest()
+    info = {}
+    info['versionCode'] = str(tmp.get('@android:versionCode'))
+    info['versionName'] = str(tmp.get('@android:versionName'))
+    info['package'] = str(tmp.get('@package'))
+    # # 获取appkey和channel
+    # data =tmp['application']['meta-data']
+    # for key in data:
+    #     if key['@android:name'] == 'UMENG_CHANNEL':
+    #         info['channel'] = str(key['@android:value'])
+    #         continue
+    #     elif key['@android:name'] == 'XiaoYing_AppKey':
+    #         info['appkey'] = str(key['@android:value'])
+    #         continue
+    # if not 'channel' in info:
+    #     info['channel'] = ''
+    # if not 'appkey' in info:
+    #     info['appkey'] = ''
+    return info
+
+
+def get_apk_activity(path):
+    tmp = apkutils.APK(path).get_manifest()
+    data = tmp['application']['activity']
+    activity_list =[]
+    for activity in data:
+        activity_list.append(activity['@android:name'])
+    return activity_list

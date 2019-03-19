@@ -26,6 +26,14 @@ class apk_install(unittest.TestCase, BasePage):
     def tearDownClass(cls):
         cls.d.app_stop("com.github.android_app_bootstrap")
 
+    # @setup
+    # def setUp(self):
+    #     pass
+    #
+    # @teardown
+    # def tearDown(self):
+    #     pass
+
     @testcase
     def test_01_install_apk(self):
         '''安装启动android_app_bootstrap'''

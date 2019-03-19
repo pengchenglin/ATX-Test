@@ -9,6 +9,7 @@ from PageObject.home import home_page
 from PageObject import login
 from Public.Test_data import get_test_data
 import unittest
+from Public.Decorator import _create_gif
 
 
 # @unittest.skip
@@ -27,13 +28,15 @@ class TestBootStrap(unittest.TestCase, BasePage):
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
         # cls.set_original_ime()
 
-    # @setup
-    # def setUp(self):
-    #     pass
-    #
-    # @teardown
-    # def tearDown(self):
-    #     pass
+    @setup
+    def setUp(self):
+        pass
+
+    @teardown
+    def tearDown(self):
+        pass
+
+
 
     @testcase
     def test_01_login(self):
@@ -43,6 +46,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         login.login_page().input_username(self.test_data['user_name'])
         login.login_page().input_password(self.test_data['password'])
         login.login_page().click_login_btn()
+        # _create_gif()
 
     @testcase
     def test_02_show_toast(self):
