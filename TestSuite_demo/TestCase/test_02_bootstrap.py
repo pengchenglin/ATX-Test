@@ -46,7 +46,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         login.login_page().input_username(self.test_data['user_name'])
         login.login_page().input_password(self.test_data['password'])
         login.login_page().click_login_btn()
-        # _create_gif()
+
 
     @testcase
     def test_02_show_toast(self):

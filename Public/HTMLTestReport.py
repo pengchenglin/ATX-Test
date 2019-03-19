@@ -1068,11 +1068,20 @@ class HTMLTestRunner(Template_mixin):
             screenshot=saxutils.escape(uo + ue)
         )
 
+
+        gif_list=re.findall("IMAGE:(\S+gif)", image, re.M)
+
         screenshot_list = re.findall("IMAGE:(\S+PNG)", image, re.M)
         screenshot = ""
+        for i in gif_list:
+            # num = str(gif_list.index(i) + 1)
+            # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">GIF_0" + num + "</a>"
+            screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">" + i + "</a>"
+
         for i in screenshot_list:
-            num = str(screenshot_list.index(i) + 1)
-            screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">IMAGE_0" + num + "</a>"
+            # num = str(screenshot_list.index(i) + 1)
+            # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">IMAGE_0" + num + "</a>"
+            screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">" + i + "</a>"
 
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL_1 or self.REPORT_TEST_NO_OUTPUT_TMPL
         row = tmpl % dict(
