@@ -6,6 +6,7 @@ Mac下需要配置  `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`到环境变
 '''
 from Public.ReadConfig import ReadConfig
 from Public.ATX_Server import ATX_Server
+from Public.atxserver2 import atxserver2
 import uiautomator2 as u2
 import subprocess
 import re
@@ -51,6 +52,28 @@ def get_online_devices():
     else:
         raise Exception('ATX-Server has no online device!!! ')
 
+def atxserver2_present_android_devices():
+    '''
+    get present_android_devices from atxserver2
+    :return:
+    '''
+    devices = atxserver2(ReadConfig().get_server_url()).present_android_devices()
+    print('Start check %s  present android devices on atxserver2' % len(devices))
+    if devices:
+        pool = Pool(processes=len(devices))
+        tmp_list = []
+        for run in devices:
+            tmp_list.append(pool.apply_async(check_alive, args=(run,)))
+        pool.close()
+        pool.join()
+        devices_list = []
+        for i in tmp_list:
+            if i.get():
+                devices_list.append(i.get())
+        return devices_list
+    else:
+        raise Exception('atxserver2 has no online device!!! ')
+
 
 def connect_devices():
     '''get the devices USB connected on PC
@@ -81,30 +104,47 @@ def connect_devices():
 
 def check_alive(device):
     if isinstance(device, dict):
-        d = u2.connect(device['ip'])
-        if d.agent_alive:
-            d.healthcheck()
-            if d.alive:
-                print('%s is alive' % device['udid'])
-                dict_tmp = d.device_info
-                dict_tmp['ip'] = device['ip']
-                return dict_tmp
+        if 'ip' in device:  # atx-server
+            d = u2.connect(device['ip'])
+            if d.agent_alive:
+                d.healthcheck()
+                if d.alive:
+                    print('%s is alive' % device['udid'])
+                    dict_tmp = d.device_info
+                    dict_tmp['ip'] = device['ip']
+                    return dict_tmp
+                else:
+                    print('%s is not alive' % device['udid'])
+                    return None
             else:
-                print('%s is not alive' % device['udid'])
+                print('The device atx_agent %s  is not alive,please checkout!' % device['udid'])
                 return None
-        else:
-            print('The device atx_agent %s  is not alive,please checkout!' % device['udid'])
-            return None
+        else:   # atxserver2
+            d=u2.connect(device['source']['atxAgentAddress'])
+            if d.agent_alive:
+                d.healthcheck()
+                if d.alive:
+                    print('%s is alive' % device['udid'])
+                    dict_tmp = d.device_info
+                    dict_tmp['ip'] = device['source']['atxAgentAddress']
+                    return dict_tmp
+                else:
+                    print('%s is not alive' % device['udid'])
+                    return None
+            else:
+                print('The device atx_agent %s  is not alive,please checkout!' % device['udid'])
+                return None
+
     else:
         d = u2.connect(device)
         if d.agent_alive:
             d.healthcheck()
             if d.alive:
-                if re.match(r"(\d+\.\d+\.\d+\.\d)", device):
+                if re.match(r"(\d+\.\d+\.\d+\.\d)", device): # config ip
                     dict_tmp = d.device_info
                     dict_tmp['ip'] = device
                     print('%s is alive' % device)
-                else:
+                else:   # usb devices
                     dict_tmp = d.device_info
                 return dict_tmp
             else:
@@ -118,7 +158,7 @@ def check_alive(device):
 
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     # devices_ip = get_devices()
 
     # devices = connect_devices()
@@ -139,3 +179,4 @@ def check_alive(device):
     # print(get_devices())
     # print(get_online_devices())
     # print(connect_devices())
+    atxserver2_present_android_devices()

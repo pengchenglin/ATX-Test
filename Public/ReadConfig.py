@@ -24,7 +24,7 @@ class ReadConfig:
 
     def get_devices_ip(self):
         value = self.cf.get("DEVICES", "IP")
-        return value.split('/')
+        return value.split('|')
 
     def get_apk_url(self):
         value = self.cf.get("APP", "apk_url")
@@ -40,7 +40,7 @@ class ReadConfig:
 
     def get_testdata(self, name):
         value = self.cf.get("TESTDATA", name)
-        return value.split('/')
+        return value.split('|')
 
 
 # if __name__ == '__main__':

@@ -29,6 +29,11 @@ def check_devives():
         print('Checking available online devices from ATX-Server...')
         devices = get_online_devices()
         print('\nThere has %s online devices in ATX-Server' % len(devices))
+    elif method=='SERVER2':
+        print('Checking available online devices from atxserver2...')
+        devices = atxserver2_present_android_devices()
+        print('\nThere has %s online devices in atxserver2' % len(devices))
+
     elif method == 'IP':
         # get  devices from config devices list
         print('Checking available IP devices from config... ')
