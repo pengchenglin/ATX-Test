@@ -21,12 +21,13 @@ from tinydb import TinyDB, where
 from tinydb.storages import MemoryStorage, JSONStorage
 import requests
 import re
+from Public.ReadConfig import ReadConfig
 
 logger = logging.getLogger(__name__)
 
 TinyDB.DEFAULT_STORAGE = MemoryStorage
 
-token = '57aca3bd69534b9bb386247bebef4f67'
+token = ReadConfig().get_server_token()
 
 
 class atxserver2(object):
@@ -146,68 +147,3 @@ class atxserver2(object):
         else:
             return False
 
-    # def model_devices(self, model):
-    #     '''查找特定型号的设备'''
-    #     self.refresh()
-    #     devices = self.find(where('model') == model).devices()
-    #     if len(devices) > 0:
-    #         return devices
-    #     else:
-    #         return False
-    #
-    # def brand_devices(self, brand):
-    #     '''查找特定品牌的设备'''
-    #     self.refresh()
-    #
-    #     devices = self.find(where('brand') == brand).devices()
-    #     if len(devices) > 0:
-    #         return devices
-    #     else:
-    #         return False
-    #
-    # def sdk_devices(self, sdk):
-    #     '''查找特定SDK的设备'''
-    #     self.refresh()
-    #     devices = self.find(where('sdk') == sdk).devices()
-    #     if len(devices) > 0:
-    #         return devices
-    #     else:
-    #         return False
-    #
-    # def version_devices(self, version):
-    #     '''查找特定SDK的设备'''
-    #     self.refresh()
-    #     devices = self.find(where('version') == version).devices()
-    #     if len(devices) > 0:
-    #         return devices
-    #     else:
-    #         return False
-    #
-    # def serial_devices(self, serial):
-    #     '''查找特定serial的设备'''
-    #     self.refresh()
-    #     devices = self.find(where('serial') == serial).devices()
-    #     if len(devices) > 0:
-    #         return devices
-    #     else:
-    #         return False
-    #
-    # def all_devices(self):
-    #     '''返回所有的设备'''
-    #     self.refresh()
-    #     devices = self.find().devices()
-    #     if len(devices) > 0:
-    #         return devices
-    #     else:
-    #         return False
-
-
-if __name__ == '__main__':
-    # atxserver2('http://192.168.3.41:4000').refresh()
-    online_devices = atxserver2('http://192.168.3.41:4000').present_ios_devices()
-
-    import json
-
-    print(json.dumps(online_devices))
-    # res = requests.get('http://192.168.3.41:4000/api/v1/user/devices/00008020-00180CEA26F8002E',headers={"Authorization": "Bearer " + '57aca3bd69534b9bb386247bebef4f67'})
-    # print(res.text)

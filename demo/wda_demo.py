@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import wda
 from Public.atxserver2 import atxserver2
+from Public.ReadConfig import ReadConfig
 
-ios_devices = atxserver2('http://192.168.3.41:4000').present_ios_devices()
+ios_devices = atxserver2(ReadConfig().get_server_url()).present_ios_devices()
 if ios_devices:
     wdaUrl = ios_devices[0]['source']['wdaUrl']
 

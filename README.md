@@ -1,6 +1,12 @@
 
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
 
+
+### 已经支持atx-server2 
+android 修改Public下的config下的Server地址为atx-server2的Url,token填写正确后,就可以正常运行了
+ios的设备的连接和操作,在设备接入到atx-server2之后, 可以参照demo下的wda_demo.py可以运行简单的网易云音乐的脚本操作.
+
+
 #### Python版本说明
 python2不支持 需要在python3上运行  本人python版本 3.6
 

@@ -56,7 +56,7 @@ class Drivers:
     def _run_cases(run, cases):
         log = Log()
         log.set_logger(run.get_device()['model'], os.path.join(run.get_path(), 'client.log'))
-        log.i('udid: %s', run.get_device()['udid'])
+        log.i('udid: %s' % run.get_device()['udid'])
 
         # set cls.path, it must be call before operate on any page
         path = ReportPath()

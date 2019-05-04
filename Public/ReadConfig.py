@@ -22,6 +22,10 @@ class ReadConfig:
         value = self.cf.get("DEVICES", "server")
         return value
 
+    def get_server_token(self):
+        value = self.cf.get("DEVICES", "token")
+        return value
+
     def get_devices_ip(self):
         value = self.cf.get("DEVICES", "IP")
         return value.split('|')
