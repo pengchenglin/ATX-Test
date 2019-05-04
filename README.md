@@ -3,8 +3,12 @@
 
 
 ### 已经支持atx-server2 
-android 修改Public下的config下的Server地址为atx-server2的Url,token填写正确后,就可以正常运行了
-ios的设备的连接和操作,在设备接入到atx-server2之后, 可以参照demo下的wda_demo.py可以运行简单的网易云音乐的脚本操作.
+android:修改Public下的config下的Server地址为atx-server2的Url,token填写正确后,就可以正常运行了
+
+ios:在设备接入到atx-server2之后, 可以参照demo下的wda_demo.py可以运行简单的网易云音乐的脚本操作.
+
+atxserver2的部署请参照大佬的帖子:
+[atxserver2 手机设备管理平台 重装上阵](https://testerhome.com/topics/19002)
 
 
 #### Python版本说明
