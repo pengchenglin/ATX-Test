@@ -11,7 +11,6 @@ data_path = os.path.join(proDir, "data.json")
 def generate_test_data(devices):
     dict_tmp = {}
     for d in devices:
-        print(d['udid'])
         dict_tmp[d['serial']] = {}
         dict_tmp[d['serial']]['user_name'] = ReadConfig().get_testdata('user_name')[devices.index(d)]
         dict_tmp[d['serial']]['password'] = ReadConfig().get_testdata('password')[devices.index(d)]

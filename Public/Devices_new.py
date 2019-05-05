@@ -108,6 +108,7 @@ def check_alive(device):
                 d.healthcheck()
                 if d.alive:
                     print('%s is alive' % device['udid'])
+                    print('atxagentUrl: %s:7912' % device['ip'])
                     dict_tmp = d.device_info
                     dict_tmp['ip'] = device['ip']
                     return dict_tmp
@@ -123,6 +124,7 @@ def check_alive(device):
                 d.healthcheck()
                 if d.alive:
                     print('%s is alive' % device['udid'])
+                    print('atxagentUrl: %s' % device['source']['atxAgentAddress'])
                     dict_tmp = d.device_info
                     dict_tmp['ip'] = device['source']['atxAgentAddress']
                     atxserver2(ReadConfig().get_server_url()).using_device(device['udid'])
@@ -143,6 +145,7 @@ def check_alive(device):
                     dict_tmp = d.device_info
                     dict_tmp['ip'] = device
                     print('%s is alive' % device)
+                    print('atxagentUrl: %s:7912' % device)
                 else:  # usb devices
                     dict_tmp = d.device_info
                 return dict_tmp
