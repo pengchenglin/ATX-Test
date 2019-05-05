@@ -26,6 +26,10 @@ class ReadConfig:
         value = self.cf.get("DEVICES", "token")
         return value
 
+    def get_server_udid(self):
+        value = self.cf.get("DEVICES", "udid")
+        return value.split('|')
+
     def get_devices_ip(self):
         value = self.cf.get("DEVICES", "IP")
         return value.split('|')
@@ -46,7 +50,8 @@ class ReadConfig:
         value = self.cf.get("TESTDATA", name)
         return value.split('|')
 
-
+#
 # if __name__ == '__main__':
 #     print(ReadConfig().get_pkg_name())
 #     print(ReadConfig().get_testdata('user_name'))
+#     print(ReadConfig().get_server_udid())

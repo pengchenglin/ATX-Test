@@ -107,15 +107,6 @@ class atxserver2(object):
         """
         self._db.purge()
 
-    def ready_devices(self):
-        '''查找标记为ready的设备'''
-        self.refresh()
-        devices = self.find(where('ready') == True).devices()
-        if len(devices) > 0:
-            return devices
-        else:
-            return False
-
     def online_devices(self):
         '''查找online 的设备'''
         self.refresh()
@@ -147,3 +138,48 @@ class atxserver2(object):
         else:
             return False
 
+    def present_udid_devices(self, **kwargs):
+        kwargs['headers'] = {"Authorization": "Bearer " + token}
+        present_udid_devices_list = []
+        for udid in ReadConfig().get_server_udid():
+            self.refresh()
+            self.find(where('udid') == udid).devices()
+            device = self.find(where('present') == True).devices()
+            if device:
+                present_udid_devices_list.append(
+                    requests.get(self._url + '/api/v1/user/devices/' + udid, **kwargs).json()['device'])
+            else:
+                pass
+        if len(present_udid_devices_list) > 0:
+            return present_udid_devices_list
+        else:
+            return False
+
+    def using_device(self, udid, **kwargs):
+        kwargs['headers'] = {"Authorization": "Bearer " + token}
+        # kwargs['json'] = {"udid": udid}
+        ret = requests.post(self._url + '/api/v1/user/devices', json={"udid": udid}, **kwargs)
+        if ret.status_code == 200:
+            print(ret.json())
+            return True
+        else:
+            return False
+
+    def release_device(self, udid, **kwargs):
+        kwargs['headers'] = {"Authorization": "Bearer " + token}
+        ret = requests.delete(self._url + '/api/v1/user/devices/' + udid, **kwargs)
+        if ret.status_code == 200:
+            print(ret.json())
+            return True
+        else:
+            return False
+
+
+# if __name__ == '__main__':
+#     import json
+#     import time
+#
+#     # print(atxserver2('http://192.168.3.41:4000').using_device('ce051715b2ef600802'))
+#     # time.sleep(4)
+#     # print(atxserver2('http://192.168.3.41:4000').release_device('ce051715b2ef600802'))
+#     print(json.dumps(atxserver2('http://192.168.3.41:4000').present_udid_devices()))

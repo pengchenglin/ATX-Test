@@ -17,7 +17,9 @@ from Public.Log import Log
 from Public.ReadConfig import ReadConfig
 from Public.chromedriver import ChromeDriver
 from Public.Test_data import generate_test_data
-from Public.Report import create_statistics_report,backup_report
+from Public.Report import create_statistics_report, backup_report
+from Public.ATX_Server import ATX_Server
+from Public.atxserver2 import atxserver2
 
 
 def check_devives():
@@ -26,22 +28,29 @@ def check_devives():
     if method == 'SERVER':
         # get ATX-Server Online devices
         # devices = ATX_Server(ReadConfig().get_server_url()).online_devices()
-        print('Checking available online devices from ATX-Server...')
-        devices = get_online_devices()
+        print('Get available online devices from ATX-Server...')
+        devices = get_online_devices(ATX_Server(ReadConfig().get_server_url()).online_devices())
         print('\nThere has %s online devices in ATX-Server' % len(devices))
-    elif method=='SERVER2':
-        print('Checking available online devices from atxserver2...')
-        devices = atxserver2_present_android_devices()
+
+    elif method == 'SERVER2':
+        print('Get available online devices from atxserver2...')
+        devices = atxserver2_online_devices(atxserver2(ReadConfig().get_server_url()).present_android_devices())
         print('\nThere has %s online devices in atxserver2' % len(devices))
+
+    elif method == 'UDID':
+        print('Get available UDID devices %s from atxserver2...' % ReadConfig().get_server_udid())
+        devices = atxserver2_online_devices(atxserver2(ReadConfig().get_server_url()).present_udid_devices())
+        print('\nThere has %s available udid devices in atxserver2' % len(devices))
 
     elif method == 'IP':
         # get  devices from config devices list
-        print('Checking available IP devices from config... ')
+        print('Get available IP devices %s from config... ' % ReadConfig().get_devices_ip())
         devices = get_devices()
         print('\nThere has %s  devices alive in config IP list' % len(devices))
+
     elif method == 'USB':
         # get  devices connected PC with USB
-        print('Checking available USB devices connected on PC... ')
+        print('Get available USB devices connected on PC... ')
         devices = connect_devices()
         print('\nThere has %s  USB devices alive ' % len(devices))
 
@@ -83,8 +92,15 @@ class Drivers:
 
             base_page.set_original_ime()
             base_page.identify()
+            if ReadConfig().get_method().strip() in ["UDID", "SERVER2"]:
+                log.i('release device %s ' % run.get_device()['serial'])
+                atxserver2(ReadConfig().get_server_url()).release_device(run.get_device()['serial'])
+            else:
+                pass
         except AssertionError as e:
             log.e('AssertionError, %s', e)
+
+
 
     @staticmethod
     def _run_maxim(run, cases, command, actions, widget_black):
@@ -108,7 +124,7 @@ class Drivers:
             base_page.d.shell('logcat -c')  # 清空logcat
             if cases:
                 run.run_cases(cases)
-            Maxim().run_monkey(monkey_shell=command,actions=actions, widget_black=widget_black)
+            Maxim().run_monkey(monkey_shell=command, actions=actions, widget_black=widget_black)
 
             base_page.d.shell('logcat -d > /sdcard/logcat.log')
             time.sleep(1)
@@ -118,8 +134,15 @@ class Drivers:
 
             base_page.set_original_ime()
             base_page.identify()
+            if ReadConfig().get_method().strip() in ["UDID", "SERVER2"]:
+                log.i('release device %s ' % run.get_device()['serial'])
+                atxserver2(ReadConfig().get_server_url()).release_device(run.get_device()['serial'])
+            else:
+                pass
         except AssertionError as e:
             log.e('AssertionError, %s', e)
+
+
 
     def run(self, cases):
         start_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
@@ -150,6 +173,7 @@ class Drivers:
         create_statistics_report(runs)
         backup_report('./TestReport', './TestReport_History', start_time)
 
+
     def run_maxim(self, cases=None, command=None, actions=False, widget_black=False):
         start_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         devices = check_devives()
@@ -174,8 +198,10 @@ class Drivers:
         backup_report('./MaximReport', './MaximReport_History', start_time)
 
 
+
+
 # if __name__ == '__main__':
-# print(ATX_Server(ReadConfig().get_url()).online_devices())
-#
-# print(get_devices())
-# print(ReadConfig().get_atx_server('method'))
+#     if ReadConfig().get_method().strip() in ["UDID", "SERVER2"]:
+#         atxserver2(ReadConfig().get_server_url()).release_device('ce051715b2ef600802')
+#     else:
+#         pass
