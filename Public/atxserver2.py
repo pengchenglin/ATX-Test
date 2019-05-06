@@ -158,7 +158,7 @@ class atxserver2(object):
     def using_device(self, udid, **kwargs):
         kwargs['headers'] = {"Authorization": "Bearer " + token}
         # kwargs['json'] = {"udid": udid}
-        ret = requests.post(self._url + '/api/v1/user/devices', json={"udid": udid}, **kwargs)
+        ret = requests.post(self._url + '/api/v1/user/devices', json={"udid": udid, "idleTimeout": 7200}, **kwargs)
         if ret.status_code == 200:
             print(ret.json())
             return True

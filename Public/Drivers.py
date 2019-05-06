@@ -142,8 +142,6 @@ class Drivers:
         except AssertionError as e:
             log.e('AssertionError, %s', e)
 
-
-
     def run(self, cases):
         start_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         devices = check_devives()
