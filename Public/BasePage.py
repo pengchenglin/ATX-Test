@@ -141,19 +141,18 @@ class BasePage(object):
         如果存在元素则自动点击
         :param keyword: exp: keyword="yes|允许|好的|跳过"
         '''
-        cls.d.watchers.watched = False
+
         for i in keyword.split("|"):
-            cls.d.watcher(i).when(text=i).click(text=i)
-        print('Starting watcher,parameter is %s' % keyword.split("|"))
-        cls.d.watchers.watched = True
+            cls.d.xpath.when(i).click()
+        cls.d.xpath.watch_background(interval=2.0)
         time.sleep(2)
 
     @classmethod
     def unwatch_device(cls):
         '''关闭watcher '''
-        print('Stop all watcher')
-        cls.d.watchers.remove()
-        cls.d.watchers.watched = False
+        cls.d.xpath.watch_clear()
+        cls.d.xpath.watch_stop()
+        time.sleep(2)
 
     @classmethod
     def get_toast_message(cls):
