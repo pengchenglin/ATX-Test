@@ -1,6 +1,6 @@
 
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
-<p align="left"><img src="Image/qqgroup.png" /></div>
+<p align="left"><img src="Image/qqgroup.JPG" /></div>
 
 
 ### 已经支持atx-server2 
