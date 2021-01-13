@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from Public.BasePage import BasePage
 
-from Public.Decorator import *
+from Public.decorator import *
 import unittest
 
-
-from PageObject import login
+from Demo.Page import login
 
 apk_path = '../apk/android_app_bootstrap-debug.apk'
 pkg_name = 'com.github.android_app_bootstrap'

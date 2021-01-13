@@ -147,7 +147,7 @@ class Template_mixin(object):
 
     DEFAULT_TITLE = '测试报告'
     DEFAULT_DESCRIPTION = ''
-    DEFAULT_TESTER = 'QA'
+    # DEFAULT_TESTER = 'QA'
 
     # ------------------------------------------------------------------------
     # HTML Template
@@ -802,7 +802,7 @@ class HTMLTestRunner(Template_mixin):
     """
     """
 
-    def __init__(self, stream=sys.stdout, verbosity=2, title=None, description=None, tester=None):
+    def __init__(self, stream=sys.stdout, verbosity=2, title=None, description=None):
         self.need_screenshot = 0
         self.stream = stream
         self.verbosity = verbosity
@@ -814,10 +814,10 @@ class HTMLTestRunner(Template_mixin):
             self.description = self.DEFAULT_DESCRIPTION
         else:
             self.description = description
-        if tester is None:
-            self.tester = self.DEFAULT_TESTER
-        else:
-            self.tester = tester
+        # if tester is None:
+        #     self.tester = self.DEFAULT_TESTER
+        # else:
+        #     self.tester = tester
 
         self.startTime = datetime.datetime.now()
 
@@ -888,7 +888,7 @@ class HTMLTestRunner(Template_mixin):
             errorCase = "无"
 
         return [
-            ('测试人员', self.tester),
+            # ('测试人员', self.tester),
             ('开始时间', startTime),
             ('合计耗时', duration),
             ('测试结果', status + "，通过率 = " + self.passrate),
@@ -964,7 +964,7 @@ class HTMLTestRunner(Template_mixin):
             title=saxutils.escape(self.title),
             parameters=''.join(a_lines),
             description=saxutils.escape(self.description),
-            tester=saxutils.escape(self.tester),
+            # tester=saxutils.escape(self.tester),
         )
         return heading
 
@@ -1067,12 +1067,15 @@ class HTMLTestRunner(Template_mixin):
         image = self.REPORT_TEST_OUTPUT_IMAGE % dict(
             screenshot=saxutils.escape(uo + ue)
         )
-
-
-        gif_list=re.findall("IMAGE:(\S+gif)", image, re.M)
-
+        mp4_list =re.findall("IMAGE:(\S+mp4)", image, re.M)
+        gif_list = re.findall("IMAGE:(\S+gif)", image, re.M)
         screenshot_list = re.findall("IMAGE:(\S+PNG)", image, re.M)
+
         screenshot = ""
+        for i in mp4_list:
+            # num = str(gif_list.index(i) + 1)
+            # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">GIF_0" + num + "</a>"
+            screenshot += "</br><a class=\"screenrecord\" href=\"" + i + "\" target=\"_blank\">" + '操作录屏' + "</a>"
         for i in gif_list:
             # num = str(gif_list.index(i) + 1)
             # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">GIF_0" + num + "</a>"
