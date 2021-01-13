@@ -5,14 +5,15 @@ from logzero import logger
 import time
 import os
 
-from Public.BasePage import BasePage
-from Public.Decorator import *
+from Public.basepage import BasePage
+from Public.decorator import *
 from uiautomator2 import UiObjectNotFoundError
 
-from Public.Log import Log
+from Public.log import Log
+from Public.config import maxin_path
 
 log = Log()
-maxin_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'Maxim')
+# maxin_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'Maxim')
 
 
 # 参考网站：
@@ -23,7 +24,7 @@ maxin_path = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'Maxim')
 class Maxim(BasePage):
 
     @classmethod
-    def command(self, package, runtime, mode=None, whitelist=False, blacklist=False, throttle=None, options=None,
+    def command(cls, package, runtime, mode=None, whitelist=False, blacklist=False, throttle=None, options=None,
                 off_line=True):
         '''
         monkey命令封装
@@ -118,33 +119,34 @@ class Maxim(BasePage):
 
     @classmethod
     def push_jar(cls):
-        cls.d.push(os.path.join(maxin_path, 'monkey.jar'), '/sdcard/')
-        cls.d.push(os.path.join(maxin_path, 'framework.jar'), '/sdcard/')
+        print(os.path.join(maxin_path, 'monkey.jar'))
+        cls.d.push(os.path.join(maxin_path, 'monkey.jar'), '/sdcard/monkey.jar')
+        cls.d.push(os.path.join(maxin_path, 'framework.jar'), '/sdcard/framework.jar')
         log.i('push jar file--->monkey.jar framework.jar')
 
     @classmethod
     def push_white_list(cls):
-        cls.d.push(os.path.join(maxin_path, 'awl.strings'), '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'awl.strings'), '/sdcard/awl.strings')
         log.i('push white_list file---> awl.strings ')
 
     @classmethod
     def push_actions(cls):
-        cls.d.push(os.path.join(maxin_path, 'max.xpath.actions'), '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'max.xpath.actions'), '/sdcard/max.xpath.actions')
         log.i('push actions file---> max.xpath.actions ')
 
     @classmethod
     def push_selector(cls):
-        cls.d.push(os.path.join(maxin_path, 'max.xpath.selector'), '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'max.xpath.selector'), '/sdcard/max.xpath.selector')
         log.i('push selector file---> max.xpath.selector ')
 
     @classmethod
     def push_widget_black(cls):
-        cls.d.push('./Maxim/max.widget.black', '/sdcard/')
+        cls.d.push(os.path.join(maxin_path,'max.widget.black'), '/sdcard/max.widget.black')
         log.i('push widget_black file---> max.widget.black ')
 
     @classmethod
     def push_string(cls):
-        cls.d.push(os.path.join(maxin_path, 'max.strings'), '/sdcard/')
+        cls.d.push(os.path.join(maxin_path, 'max.strings'), '/sdcard/max.strings')
         log.i('push string file---> max.strings ')
 
     @classmethod

@@ -14,15 +14,17 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 bundle_tool_path = os.path.join(current_path, 'static', 'bundletool-all.jar')
 tmp_apks_path = os.path.join(current_path, 'tmp.apks')
 ks_path = os.path.join(current_path, 'static', 'ksfile')
+maxin_path = os.path.join(current_path, 'Maxim')
 
 unlock_apk = os.path.join(current_path, 'static', 'unlock.apk')
+test_apk = os.path.join(current_path, 'static', 'android_app_bootstrap-debug.apk')
 
 
-# dic xiaoyingapp
+# dic internalapp
 # key: packagename
 # name: app名称
 # app_folder: app在手机上可能存在的文件夹路径
-xiaoyingapp = \
+internalapp = \
     {
     "com.quvideo.xiaoying":
         {"name": "小影App",
@@ -42,8 +44,6 @@ brand_filemanager = \
      'Meizu': 'com.meizu.filemanager',
      'samsung': 'com.sec.android.app.myfiles',
      'OnePlus': 'com.oneplus.filemanager',
-     'es': 'com.estrongs.android.pop',
-     'solide': 'pl.solidexplorer2'
     }
 
 
@@ -62,7 +62,6 @@ def get_java_path():
         jpath = whichcraft.which('java')
     else:
         raise Exception('Java 环境配置异常 请检查电脑Java环境配置')
-        # print('Java Path: %s' % jpath)
     return jpath
 
 

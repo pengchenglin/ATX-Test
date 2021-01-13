@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# from Public.BasePage import BasePage
-# from Public.maxim_monkey import Maxim
-from Public.Decorator import *
-from uiautomator2 import UiObjectNotFoundError
+# from Public.basepage import BasePage
+# from uiautomator2 import UiObjectNotFoundError
+
+from Public.decorator import *
+from Public.log import Log
+from Demo import dm_config
+import json
+from Public.filetools import read_file
+package = json.loads(read_file(dm_config.info_path))['package']
+log = Log()
 
 class home_page(BasePage):
     @teststep
@@ -38,10 +44,4 @@ class home_page(BasePage):
         log.i('点击退出按钮')
         self.d(resourceId="com.github.android_app_bootstrap:id/logout_button").click()
 
-if __name__ == '__main__':
-    from Public.Log import Log
 
-    Log().set_logger('udid', './log.log')
-    BasePage().set_driver(None)
-    # log.i(creation_page().click_view_pager_btn('素材中心'))
-    home_page().click_tab(2)

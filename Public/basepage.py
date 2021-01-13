@@ -5,7 +5,7 @@ from uiautomator2 import UiObjectNotFoundError
 import re
 from Public.reportpath import ReportPath
 from Public.test_data import get_apk_info
-from Public.config import xiaoyingapp,unlock_apk
+from Public.config import internalapp,unlock_apk
 from Public.chromedriver import ChromeDriver
 from Public.ports import Ports
 
@@ -34,8 +34,8 @@ class BasePage(object):
 
         if clear:
             log.i("Clear Device %s folder" % packagename)
-            if packagename in xiaoyingapp:
-                for f in xiaoyingapp[packagename]['app_folder']:
+            if packagename in internalapp:
+                for f in internalapp[packagename]['app_folder']:
                     log.i('remove folder :%s' % f)
                     cls.d.shell('rm -rf %s' % f)   # 删除app的本地所在文件夹
             else:

@@ -6,11 +6,12 @@ from Public.basepage import BasePage
 from Public.decorator import *
 from Demo.Page import login
 import unittest
-
-from Public.ReadConfig import ReadConfig
-apk_url = ReadConfig().get_apk_url()
-pkg_name = ReadConfig().get_pkg_name()
-apk_path = ReadConfig().get_apk_path()
+import json
+from Public.filetools import read_file
+from Demo import dm_config
+log = Log()
+pkg_name = json.loads(read_file(dm_config.info_path))['package']
+apkpath = json.loads(read_file(dm_config.info_path))['apk_path']
 
 
 class apk_install(unittest.TestCase, BasePage):
@@ -38,7 +39,7 @@ class apk_install(unittest.TestCase, BasePage):
         '''安装启动android_app_bootstrap'''
         self.d.app_uninstall(pkg_name)
         # self.d.app_install(apk_url)
-        self.local_install(apk_path)
+        self.local_install(apkpath)
         self.d.app_start(pkg_name)
         time.sleep(3)
         login.login_page().wait_page()
@@ -56,22 +57,22 @@ class apk_install(unittest.TestCase, BasePage):
     def test_02_fail(self):
         '''异常处理'''
         ele = self.d(text='Login')
-        print(ele.get_text())
+        log.i(ele.get_text())
         try:
             #  实际是 Login
             self.assertEqual(ele.get_text(), '登录')
         except AssertionError:
-            print('失败截图一张')
+            log.i('失败截图一张')
             raise
         finally:
             self.d(text='Login').click()
-            print('手动截图一张')
+            log.i('手动截图一张')
             self.screenshot()
 
     @testcase
     def test_04_error(self):
         '''错误处理'''
-        print('手动出错')
+        log.i('手动出错')
         raise Exception('手动ERROR!!!!!!!')
 
 

@@ -32,3 +32,7 @@ class Ports:
                 port += 1
 
         return port_list
+
+
+if __name__ == '__main__':
+    print(Ports().get_ports(1))

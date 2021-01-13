@@ -7,7 +7,12 @@ from Public.decorator import *
 from Demo.Page.home import home_page
 from Demo.Page import login
 import unittest
-
+import json
+from Public.filetools import read_file
+from Demo import dm_config
+log = Log()
+pkg_name = json.loads(read_file(dm_config.info_path))['package']
+apkpath = json.loads(read_file(dm_config.info_path))['apk_path']
 
 # @unittest.skip
 class TestBootStrap(unittest.TestCase, BasePage):
@@ -52,13 +57,13 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.d(text='Toast').click()
         toast1 = self.get_toast_message()
         assert 'Toast' in toast1
-        print('点击Toast按钮后的toast信息为:\n%s' % toast1)
+        log.i('点击Toast按钮后的toast信息为:\n%s' % toast1)
         # time.sleep(2)
         self.d(text='Show Dialog').click()
         toast2 = self.get_toast_message()
         self.assertIn('Hello', toast2)
         # self.assertEqual('Hello', toast2)
-        print('点击Show Dialog后的toast信息为:\n%s' % toast2)
+        log.i('点击Show Dialog后的toast信息为:\n%s' % toast2)
 
         self.back()
         self.back()
@@ -102,14 +107,13 @@ class TestBootStrap(unittest.TestCase, BasePage):
     def test_05_webview_u2(self):
         '''直接用u2操作webview'''
         # self.d(resourceId="index-form").child(className="android.widget.EditText").set_text("西湖美景")
-        self.d(resourceId="index-kw", className="android.widget.EditText").set_text("西湖美景")
+        self.d(resourceId="index-kw", className="android.widget.EditText").set_text("西湖")
         self.d(text=u"百度一下", className="android.widget.Button").click()
-        self.d(text=u"西湖十景_百度百科").click()
+        time.sleep(2)
+        self.d(textContains=u"百度百科").click()
         time.sleep(4)
-        for i in range(20):
+        for i in range(5):
             self.swipe_up()
-            # time.sleep(0.1)
-        self.screenshot()
         time.sleep(2)
 
     @testcase
@@ -137,3 +141,18 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.swipe_left()
         self.swipe_down()
         self.swipe_right()
+
+if __name__ == '__main__':
+    from Public.log import Log
+    from Public.reportpath import ReportPath
+    from Public.filetools import mk_dir
+
+    debug_folder = mk_dir('./debug')
+    Log().set_logger('udid', os.path.join(debug_folder, 'log.log'))
+    ReportPath().set_path(debug_folder)
+    BasePage().set_driver(None)
+    suite = unittest.TestSuite()
+    # suite.addTest(TestBootStrap('test_05_webview_u2'))
+    suite.addTest(TestBootStrap('test_04_webview_chromedriver'))
+    runner = unittest.TextTestRunner()
+    runner.run(suite)

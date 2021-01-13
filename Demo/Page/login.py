@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from Public.BasePage import BasePage
-from Public.maxim_monkey import Maxim
-from Public.Decorator import *
-from uiautomator2 import UiObjectNotFoundError
+# from Public.basepage import BasePage
+# from uiautomator2 import UiObjectNotFoundError
+from Public.decorator import *
+from Public.log import Log
+from Demo import dm_config
+import json
+from Public.filetools import read_file
+package = json.loads(read_file(dm_config.info_path))['package']
+log = Log()
 
 
 class login_page(BasePage):
@@ -38,8 +43,4 @@ class login_page(BasePage):
 
 
 
-def login(username, password):
-    page = LoginPage()
-    page.input_username(username)
-    page.inputpassword(password)
-    page.login_click()
+

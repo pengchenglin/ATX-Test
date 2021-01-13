@@ -1,8 +1,8 @@
 import os
 
-# 渠道包下载链接
-url = 'http://www1.xiaoying.co/Android/vivavideoLeap/install.html'
-key = 'VivaCut'
+# 被测app下载链接
+url = 'https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk'
+
 project_path = os.path.dirname(os.path.abspath(__file__))
 info_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app_info.json')
 

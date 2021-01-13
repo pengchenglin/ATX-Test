@@ -11,12 +11,14 @@ from Public.test_data import *
 from Demo import dm_config
 from Public.devices_new import check_devives
 
+from Public.config import test_apk
+
 if __name__ == '__main__':
     # 备份旧的报告文件
-    backup_report(vc_config.project_path)   # 备份旧的测试报告文件夹到TestReport_backup下
+    backup_report(dm_config.project_path)   # 备份旧的测试报告文件夹到TestReport_backup下
 
     # # 准备测试包
-    apk_info = prepare_apk('http://www1.xiaoying.co/Android/vivavideoLeap/QA/2.1.0/0_100064/VivaCut_V2.1.0_0_abroad_Debug-Bv2.1.0-TSxiaoyingtest-20210112_174643.apk',  # 公司下载qa测试包的网站地址或被测app的url下载地址，也可以直接填写本地的地址
+    apk_info = prepare_apk(test_apk,  # 被测app的url下载地址，也可以直接填写本地的地址
                            dm_config.project_path)  # 当前测试app的文件夹所在地址绝对路径，config文件里写好的不用动
 
     # 测试设备准备
