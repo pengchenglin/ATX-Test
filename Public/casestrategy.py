@@ -12,8 +12,8 @@ class CaseStrategy:
         self.case_pattern = 'test*.py'
 
     def _collect_cases(self, cases, top_dir=None):
-        print(os.path.abspath(self.case_path))
-        suites = unittest.defaultTestLoader.discover(self.case_path, pattern=self.case_pattern, top_level_dir=top_dir)
+        top_dir = os.path.join(os.path.abspath(top_dir), self.case_path)
+        suites = unittest.defaultTestLoader.discover(start_dir=top_dir, pattern=self.case_pattern, top_level_dir=top_dir)
         for suite in suites:
             for case in suite:
                 cases.addTest(case)
@@ -35,15 +35,14 @@ class CaseStrategy:
                     if os.path.isdir(file):
                         test_suites.append(file)
             test_suites.sort()
-            print(test_suites)
             for test_suite in test_suites:
                 self._collect_cases(cases, top_dir=test_suite)
         else:
-            self._collect_cases(cases, top_dir=None)
+            self._collect_cases(cases, top_dir=os.path.abspath('.'))
 
         return cases
 
 
 if __name__ == '__main__':
-    suites = unittest.defaultTestLoader.discover('TestCase',pattern='test*.py',top_level_dir='/Users/linpengcheng/Desktop/gitlab/Viva_Android_UITest/VivaCut/TestSuite_01_Install/')
+    suites = unittest.defaultTestLoader.discover('/Users/linpengcheng/Desktop/Viva_Android_UITest/VivaCut/TestSuite_01_Install/TestCase',pattern='test*.py')
     print(suites)
