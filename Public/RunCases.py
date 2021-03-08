@@ -27,9 +27,9 @@ class RunCases:
     def get_device(self):
         return self.device
 
-    def run(self, cases):
+    def run(self, cases,retry,save_last_try):
         with open(self.file_name, 'wb') as file:
-            runner = HTMLTestRunner(stream=file, title=self.device['model']+'自动化测试报告', description='用例执行情况：')
+            runner = HTMLTestRunner(stream=file, title=self.device['model']+'自动化测试报告', description='用例执行情况：',retry=retry,save_last_try=save_last_try)
             runner.run(cases)
             file.close()
 

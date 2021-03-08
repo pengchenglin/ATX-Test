@@ -14,13 +14,10 @@ log = Log()
 class login_page(BasePage):
     @teststep
     def wait_page(self):
-        try:
-            if self.d(text='Login').wait(timeout=15):
-                return True
-            else:
-                raise Exception('Not in LoginPage')
-        except Exception:
-            raise Exception('Not in LoginPage')
+        if self.d(resourceId="com.github.android_app_bootstrap:id/login_button").wait(timeout=15):
+            return True
+        else:
+            return False
 
     @teststep
     def input_username(self, text):

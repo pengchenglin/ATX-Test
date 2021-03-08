@@ -43,6 +43,3 @@ class CaseStrategy:
         return cases
 
 
-if __name__ == '__main__':
-    suites = unittest.defaultTestLoader.discover('/Users/linpengcheng/Desktop/Viva_Android_UITest/VivaCut/TestSuite_01_Install/TestCase',pattern='test*.py')
-    print(suites)

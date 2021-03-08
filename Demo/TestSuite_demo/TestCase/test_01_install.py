@@ -26,23 +26,27 @@ class apk_install(unittest.TestCase, BasePage):
     def tearDownClass(cls):
         cls.d.app_stop("com.github.android_app_bootstrap")
 
-    # @setup
-    # def setUp(self):
-    #     pass
-    #
-    # @teardown
-    # def tearDown(self):
-    #     pass
+    @setup
+    def setUp(self):
+        self.startscreenrecord()
+
+    @teardown
+    def tearDown(self):
+        self.stopscreenrecord()
+
 
     @testcase
     def test_01_install_apk(self):
         '''安装启动android_app_bootstrap'''
+
         self.d.app_uninstall(pkg_name)
         # self.d.app_install(apk_url)
         self.local_install(apkpath)
+        watcher = self.watch_device("继续|确定")
         self.d.app_start(pkg_name)
         time.sleep(3)
         login.login_page().wait_page()
+        self.unwatch_device(watcher)
 
 
     @testcase

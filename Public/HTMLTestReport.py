@@ -77,6 +77,13 @@ from xml.sax import saxutils
 import sys
 import os
 import re
+import copy
+
+# PY3K = (sys.version_info[0] > 2)
+# if PY3K:
+#     import io as StringIO
+# else:
+#     import StringIO
 
 
 class OutputRedirector(object):
@@ -184,6 +191,14 @@ class Template_mixin(object):
         var p_attribute = $("p.attribute");
         p_attribute.eq(4).addClass("failCollection");
         p_attribute.eq(5).addClass("errorCollection");
+        
+        // 打开录屏视频
+        $('.screenrecord').click(function (e) {
+                var src = $(this).attr("data-src");
+                // $('#exampleModal').modal('show');
+                $('#myModal').modal('show')
+                $(".vie").attr("src", src)
+            });
 
         // 打开截图，放大，点击任何位置可以关闭图片  -- Gelomen
         $(".screenshot").click(function(){
@@ -668,7 +683,15 @@ table       { font-size: 100%; }
     # ENDING
     #
     # 增加返回顶部按钮  --Findyou
-    ENDING_TMPL = """<div id='ending'>&nbsp;</div>
+    ENDING_TMPL = """<div class="modal fade bs-example-modal-lg" role="dialog" id="myModal" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 0px">
+                <video class="vie" src="" controls preload="metadata"></video>
+            </div>
+        </div>
+    </div>
+    <div id='ending'>&nbsp;</div>
     <div id="toTop" style=" position:fixed;right:50px; bottom:30px; width:20px; height:20px;cursor:pointer; display: none">
     <a><span class="glyphicon glyphicon-eject" style = "font-size:30px;" aria-hidden="true">
     </span></a></div>
@@ -685,13 +708,14 @@ class _TestResult(TestResult):
     # note: _TestResult is a pure representation of results.
     # It lacks the output and reporting ability compares to unittest._TextTestResult.
 
-    def __init__(self, verbosity=1):
+    def __init__(self, verbosity=1,retry=3,save_last_try=False):
         TestResult.__init__(self)
         self.stdout0 = None
         self.stderr0 = None
         self.success_count = 0
         self.failure_count = 0
         self.error_count = 0
+        self.skip_count = 0
         self.verbosity = verbosity
 
         # result is a list of result in 4 tuple
@@ -702,6 +726,11 @@ class _TestResult(TestResult):
         #   stack trace,
         # )
         self.result = []
+
+        self.retry = retry
+        self.trys = 0
+        self.status = 0
+        self.save_last_try = save_last_try
         # 增加一个测试通过率 --Findyou
         self.passrate = float(0)
 
@@ -744,10 +773,35 @@ class _TestResult(TestResult):
         # Usually one of addSuccess, addError or addFailure would have been called.
         # But there are some path in unittest that would bypass this.
         # We must disconnect stdout in stopTest(), which is guaranteed to be called.
+
+        if self.retry and self.retry >= 1:
+            if self.status == 1:
+                self.trys += 1
+                if self.trys <= self.retry:
+                    if self.save_last_try:
+                        t = self.result.pop(-1)
+                        if t[0] == 1:
+                            self.failure_count -= 1
+                        else:
+                            self.error_count -= 1
+                    test = copy.copy(test)
+                    sys.stderr.write("Retesting... ")
+                    sys.stderr.write(str(test))
+                    sys.stderr.write('..%d \n' % self.trys)
+                    doc = getattr(test, '_testMethodDoc', u"") or u''
+                    if doc.find('_retry') != -1:
+                        doc = doc[:doc.find('_retry')]
+                    desc = "%s_retry:%d" % (doc, self.trys)
+                    test._testMethodDoc = desc
+                    test(self)
+                else:
+                    self.status = 0
+                    self.trys = 0
         self.complete_output()
 
     def addSuccess(self, test):
         self.success_count += 1
+        self.status = 0
         TestResult.addSuccess(self, test)
         output = self.complete_output()
         use_time = round(self.test_end_time - self.test_start_time, 2)
@@ -762,6 +816,7 @@ class _TestResult(TestResult):
 
     def addError(self, test, err):
         self.error_count += 1
+        self.status = 1
         TestResult.addError(self, test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
@@ -780,6 +835,7 @@ class _TestResult(TestResult):
 
     def addFailure(self, test, err):
         self.failure_count += 1
+        self.status = 1
         TestResult.addFailure(self, test, err)
         _, _exc_str = self.failures[-1]
         output = self.complete_output()
@@ -802,10 +858,13 @@ class HTMLTestRunner(Template_mixin):
     """
     """
 
-    def __init__(self, stream=sys.stdout, verbosity=2, title=None, description=None):
-        self.need_screenshot = 0
+    def __init__(self, stream=sys.stdout, verbosity=2, title=None, description=None,retry=3,save_last_try=False):
+        # self.need_screenshot = 0
         self.stream = stream
         self.verbosity = verbosity
+        self.retry = retry
+        self.save_last_try = save_last_try
+        self.run_times = 0
         if title is None:
             self.title = self.DEFAULT_TITLE
         else:
@@ -823,9 +882,10 @@ class HTMLTestRunner(Template_mixin):
 
     def run(self, test):
         "Run the given test case or test suite."
-        result = _TestResult(self.verbosity)  # verbosity为1,只输出成功与否，为2会输出用例名称
+        result = _TestResult(self.verbosity,self.retry,self.save_last_try)  # verbosity为1,只输出成功与否，为2会输出用例名称
         test(result)
         self.stopTime = datetime.datetime.now()
+        self.run_times += 1
         self.generateReport(test, result)
         # 优化测试结束后打印蓝色提示文字 -- Gelomen
         print("\n\033[36;0m--------------------- 测试结束 ---------------------\n"
@@ -1067,7 +1127,7 @@ class HTMLTestRunner(Template_mixin):
         image = self.REPORT_TEST_OUTPUT_IMAGE % dict(
             screenshot=saxutils.escape(uo + ue)
         )
-        mp4_list =re.findall("IMAGE:(\S+mp4)", image, re.M)
+        mp4_list = re.findall("IMAGE:(\S+mp4)", image, re.M)
         gif_list = re.findall("IMAGE:(\S+gif)", image, re.M)
         screenshot_list = re.findall("IMAGE:(\S+PNG)", image, re.M)
 
@@ -1075,11 +1135,13 @@ class HTMLTestRunner(Template_mixin):
         for i in mp4_list:
             # num = str(gif_list.index(i) + 1)
             # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">GIF_0" + num + "</a>"
-            screenshot += "</br><a class=\"screenrecord\" href=\"" + i + "\" target=\"_blank\">" + '操作录屏' + "</a>"
-        for i in gif_list:
-            # num = str(gif_list.index(i) + 1)
-            # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">GIF_0" + num + "</a>"
-            screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">" + i + "</a>"
+            # screenshot += "</br><a class=\"screenrecord\" href=\"" + i + "\" target=\"_blank\">" + '操作录屏' + "</a>"
+            screenshot += "</br><a class=\"screenrecord\" data-toggle=\"modal\" data-src=\"" + i + "\">" + "操作录屏" + \
+                          "</a>"
+        # for i in gif_list:
+        #     # num = str(gif_list.index(i) + 1)
+        #     # screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">GIF_0" + num + "</a>"
+        #     screenshot += "</br><a class=\"screenshot\" href=\"javascript:void(0)\" img=\"" + i + "\">" + i + "</a>"
 
         for i in screenshot_list:
             # num = str(screenshot_list.index(i) + 1)

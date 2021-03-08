@@ -23,7 +23,7 @@ from logzero import logger
 
 class Drivers:
     @staticmethod
-    def _run_cases(run, cases):
+    def _run_cases(run, cases, retry, save_last_try):
         log = Log()
         log.set_logger(run.get_device()['model'], run.get_path() + '/' + 'client.log')
         log.i('udid: %s' % run.get_device()['udid'])
@@ -46,7 +46,7 @@ class Drivers:
             base_page.set_fastinput_ime()  # 设置fastime输入法
             # base_page.d.shell('logcat -c')  # 清空logcat
             # 开始执行测试
-            run.run(cases)
+            run.run(cases, retry, save_last_try)
 
             # 结束后操作
             base_page.unwatch_device()
@@ -103,7 +103,7 @@ class Drivers:
         except AssertionError as e:
             log.e('AssertionError, %s', e)
 
-    def run(self, devices, cases, apk_info):
+    def run(self, devices, cases, apk_info,retry=3,save_last_try=True):
         if not devices:
             logger.error('There is no device found,test over.')
             return
@@ -116,7 +116,7 @@ class Drivers:
         pool = Pool(processes=len(runs))
         for run in runs:
             pool.apply_async(self._run_cases,
-                             args=(run, cases,))
+                             args=(run, cases, retry, save_last_try))
             time.sleep(2)
         logger.info('Waiting for all runs done........ ')
         pool.close()

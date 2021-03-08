@@ -28,9 +28,10 @@ if __name__ == '__main__':
     # 测试cases准备
     cs = CaseStrategy()  # 遍历目录，找到所有的测试ceses
     cases = cs.collect_cases(suite=True)
+    print(cases)
 
     # 执行测试并生成报告
-    Drivers().run(devices, cases, apk_info)
+    Drivers().run(devices, cases, apk_info,retry=3,save_last_try=True)
 
     # # 删除测试apk
     # os.remove(apk_info['apk_path'])

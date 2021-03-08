@@ -2,6 +2,14 @@
 基于ATX-Server的UI自动化测试框架，可以实现多设备的并行测试，并生成统一的测试报告
 <p align="left"><img src="Image/qqgroup.JPG" /></div>
 
+### 更新说明 20210309
+1. 支持失败重试 `Drivers().run(devices, cases, apk_info,retry=3,save_last_try=True)`中 retry 为失败重试次数 save_last_try为是否只展示最后一次运行结果
+2. 支持运行视频录制 (需要提前下载好依赖 `pip3 install -U "uiautomator2[image]" -i https://pypi.doubanio.com/simple`)
+
+    在报告中展示 需要 `basepage().startscreenrecord()`  `basepage().stopscreenrecord()` 组合操作 中间脚本执行的操作录屏视频结果会在报告中展示，建议直接放在setUp和tearDown中
+3. watcher 替换为了watch_context 需要在开始的时候实例化`ctx=basepage().watch_device('XXXX')` 
+   
+    停止的时候 再调用`basepage().unwatch_device(ctx)`把监听关掉
 
 ### 已经支持atx-server2 
 android:修改Public下的config下的Server地址为atx-server2的Url,token填写正确后,就可以正常运行了
@@ -13,7 +21,7 @@ atxserver2的部署请参照大佬的帖子:
 
 
 #### Python版本说明
-python2不支持 需要在python3上运行  本人python版本 3.6
+python2不支持 需要在python3上运行  本人python版本 3.8.7
 
 #### 前置条件
 Android设备需要通过uiautomator2 init 初始化完成，确认可以正常连接 ，或者init 接入atx-server
